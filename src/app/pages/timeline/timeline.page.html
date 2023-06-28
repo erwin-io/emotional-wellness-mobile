@@ -1,0 +1,156 @@
+
+<ion-header no-border no-shadow mode="md">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="close-outline" style="font-size: 2em!important;" color="primary" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Timeline</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+  
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button [disabled]="isLoading" (click)="prevDate()" >
+        <ion-icon name="chevron-back-circle-outline" style="font-size: 2em!important;" color="primary" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title 
+      matRipple 
+      [matRippleUnbounded]="true" 
+      [matRippleRadius]="20" 
+      id="open-date-picker"
+      class="ion-text-center">
+      <app-date-formatter [date]="currentSelected" format="MMMM dd, yyyy"></app-date-formatter>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button [disabled]="isLoading || !isNextEnable" (click)="isNextEnable ? nextDate() : false">
+        <ion-icon name="chevron-forward-circle-outline" style="font-size: 2em!important;" color="primary" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <div class="calendar-days" [ngClass]="{'show-shadow' : data.length > 2}">
+    <ul>
+      <li 
+        *ngFor="let item of weeks;" 
+        matRipple 
+        [matRippleUnbounded]="item.enabled(item.date) ? true : false" 
+        [matRippleRadius]="30" 
+        [ngClass]="{ 'current': item.isCurrent(item.date), 'enabled' : item.enabled(item.date) }"
+        (click)="item.enabled(item.date) ? selectDate(item.date) : true">
+        <h1 class="date">
+          <app-date-formatter [date]="item.date" format="dd"></app-date-formatter>
+        </h1>
+        <h4 class="day">
+          <app-date-formatter [date]="item.date" format="EE"></app-date-formatter>
+        </h4>
+        <div class="mood" *ngIf="!isLoading; else loadingEmoji">
+          <app-emoji-face *ngIf="item.moodEntityId && item.moodEntityId !== ''" [moodEntityId]="item.moodEntityId"></app-emoji-face>
+        </div>
+        <ng-template #loadingEmoji>
+          <div class="mood">
+            <ion-skeleton-text [animated]="true" style="height: 100%;width: 100%;"></ion-skeleton-text>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+</ion-header>
+
+<ion-content mode="md">
+
+  <ion-refresher *ngIf="!isLoading" slot="fixed" (ionRefresh)="doRefresh($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="list">
+    <div class="row timeline">
+      <div class="col" *ngIf="!isLoading; else loadingCards">
+        <ion-card 
+          mode="ios" 
+          *ngFor="let item of data" 
+          (click)="openDetails(item)" 
+          matRipple
+          [matRippleUnbounded]="false">
+          <ion-card-content>
+            <ion-list lines="none">
+              <ion-item class="ion-no-padding" >
+                <ion-avatar>
+                  <app-emoji-face [moodEntityId]="item.moodEntity.moodEntityId"></app-emoji-face>
+                </ion-avatar>
+                <ion-label>
+                  <h3><app-date-formatter [date]="item.timestamp" format="hh:mm a"></app-date-formatter></h3>
+                  <h1 class=""><strong>{{ item.moodEntity.name }}</strong></h1>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list class="footer" lines="none" >
+              <ion-item lines="none" class="ion-no-padding" >
+                <ion-icon name="pulse-outline" slot="start"></ion-icon>
+                <ion-label slot="start">
+                  <h3><strong>{{ item.heartRateLog.value }} bpm</strong></h3>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+  
+  <ion-modal trigger="open-date-picker" [cssClass]="'bottom-end'">
+    <ng-template>
+      <ion-datetime
+        presentation="date"
+        size="cover"
+        [max]="maxDatePicker.toISOString()"
+        [formControl]="selectDateCtrl"
+        [showDefaultButtons]="true"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="newJournal()" >
+    <ion-fab-button>
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-modal 
+    #journalDetailsModal
+    [initialBreakpoint]="0.80" 
+    [breakpoints]="[0, 0.80, 1]" 
+    class="journal-details-modal">
+    <ng-template>
+      <app-journal-details [details]="selectedDetails"></app-journal-details>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
+
+<ng-template #loadingCards>
+  <div class="col">
+    <ion-card mode="ios" *ngFor="let item of data">
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item detail="false" class="ion-no-padding">
+            <ion-avatar slot="start">
+              <ion-skeleton-text [animated]="true" style="height: 100%;"></ion-skeleton-text>
+            </ion-avatar>
+            <ion-label>
+              <h4><ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text></h4>
+              <h3><strong><ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text></strong></h3>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-list lines="none">
+          <ion-item lines="none" class="ion-no-padding">
+            <ion-skeleton-text [animated]="true" style="height: 100%;"></ion-skeleton-text>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ng-template>

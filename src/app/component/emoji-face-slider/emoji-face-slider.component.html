@@ -1,0 +1,6 @@
+
+<swiper-container #swiperContainer [ngClass]="{ 'touched': isTouching }" #swiper class="swiper-container" (activeindexchange)="activeIndexChange($event)" (touchstart)="isTouching = true;" (touchend)="isTouching = false;">
+    <swiper-slide *ngFor="let item of mood;">
+      <app-emoji-face [moodEntityId]="item" class="emoji-type"></app-emoji-face>
+    </swiper-slide>
+  </swiper-container>

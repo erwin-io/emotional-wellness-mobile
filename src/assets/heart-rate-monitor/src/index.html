@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, user-scalable=no"
+		/>
+		<link rel="stylesheet" type="text/css" href="style.css" id="style" />
+		<title>💓 Heart Rate Monitor</title>
+		<style>
+			:root {
+				/* Variables for both color schemes */
+				--transition-duration: 0.2s;
+				--border-radius-small: 6px;
+				--border-radius-medium: 10px;
+				--border-radius-large: 15px;
+			}
+
+			:root {
+				--page-background: #fff;
+				--page-color: #111;
+				--text-color-muted: #666;
+				--graph-background: transparent;
+				--graph-color: #f76;
+				--backdrop-background: rgba(0, 0, 0, 0.3);
+				--nav-item-background: #151515;
+			}
+
+			/* TODO: Finish light color schemea
+			@media (prefers-color-scheme: light) {
+				:root {
+					--page-background: #fff;
+					--page-color: #222;
+					--text-color-muted: #999;
+					--graph-background: #fff;
+					--graph-color: #f76;
+					--backdrop-background: rgba(200, 200, 200, 0.3);
+					--nav-item-background: #bbb;
+				}
+			}
+			*/
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="main-view">
+				<main>
+					<section id="bpm-display-container">
+						<div id="bpm-display">
+						</div>
+						<div id="progressbar" class="hidden" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="--value:0"></div>
+					</section>
+
+					<section id="graph-container">
+						<canvas id="graph-canvas"></canvas>
+					</section>
+				</main>
+			</div>
+			
+				
+			<video id="camera-feed" style="display: none!important;"></video>
+
+			<div class="modal debug" data-name="debug">
+				<div class="modal-box">
+					<div class="heading">
+						<h1>Debug</h1>
+						<button class="icon-button close">
+							<span>Close</span>
+						</button>
+					</div>
+					<div class="content">
+						<div class="debug-view">
+							<div class="feeds">
+								<canvas
+									id="sampling-canvas"
+									width="400"
+									height="400"
+								></canvas>
+							</div>
+							<div id="debug-log"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="main.js"></script>
+		<script>
+
+
+			function setupNav() {
+				document.querySelectorAll("nav a").forEach((link) => {
+					link.addEventListener("click", (event) => {
+						event.preventDefault();
+						document
+							.querySelector("nav.menu")
+							.classList.toggle("open");
+
+						const modalName = event.target.getAttribute(
+							"data-modal-name"
+						);
+					});
+				});
+			}
+
+			document.addEventListener("DOMContentLoaded", function () {
+				let averageByUser = 0;
+				let bpmLog = [];
+				let captureTImeout;
+				let capturePercentage = 0;
+				const getUser = localStorage.getItem("loginUser");
+				if(getUser && getUser !== "") {
+					const { age } = JSON.parse(getUser);
+					console.log(age);
+					averageByUser = 200 - age;
+				} else {
+					averageByUser = 200;
+				}
+				setupNav();
+				const videoElem = document.getElementById('camera-feed');
+				videoElem.style.display = 'none';
+				// Initialize the heart rate monitor
+				heartRateMonitor.initialize({
+					videoElement: videoElem,
+					samplingCanvas: document.getElementById("sampling-canvas"),
+					graphCanvas: document.getElementById("graph-canvas"),
+					graphColor: getComputedStyle(
+						document.documentElement
+					).getPropertyValue("--graph-color"),
+					graphWidth: 6,
+					onBpmChange: (bpm)=> {
+						window.parent.document.dispatchEvent(new CustomEvent('heartRateChanged', { detail: { bpm } }))
+					},
+				});
+				window.document.addEventListener('heartRateStart', (e)=> {
+					console.log('starting heart rate...');
+					heartRateMonitor.startMonitoring();
+					
+				}, false);
+				window.document.addEventListener('heartRateStop', (e)=> {
+					console.log('heart rate stopped!');
+					heartRateMonitor.stopMonitoring();
+				}, false);
+				
+			});
+		</script>
+	</body>
+</html>

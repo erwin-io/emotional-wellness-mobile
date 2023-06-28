@@ -1,0 +1,287 @@
+<ion-header no-border no-shadow>
+  <ion-toolbar mode="md">
+    <div slot="start" class="profile-toolbar">
+      <ion-avatar (click)="onShowSettings()">
+        <img alt="Silhouette of a person's head"  [src]="user.userProfilePic" (error)="profilePicErrorHandler($event)" />
+      </ion-avatar>
+    </div>
+    <ion-title class="ion-text-center">Home({{env}})</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onShowNotif()">  
+        <ion-icon color="primary" slot="icon-only" name="notifications-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" mode="md">
+  <ion-refresher *ngIf="!isLoading" slot="fixed" (ionRefresh)="doRefresh($event)" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="content">
+    <div class="col welcome">
+      <div class="row name">
+        <h1>{{'Welcome Back'}}, {{ user.firstName }}!</h1>
+      </div>
+      <div class="row description">
+        <h3>Let's track your mood today.</h3>
+      </div>
+    </div>
+    <br>
+    <div class="row dashboard today">
+      <div class="col">
+        <h3>Summary of today's mood</h3>
+        <ion-card 
+          mode="ios">
+          <ion-card-content>
+            <ion-list lines="none" *ngIf="!isLoading; else elseLoadingCards">
+              <ion-item class="ion-no-padding" *ngIf="todaysSummary && todaysSummary.timestamp; else elseNoEntryToday" 
+              matRipple (click)="onOpenTimeline()">
+                <ion-avatar>
+                  <app-emoji-face [moodEntityId]="todaysSummary.moodEntityId"></app-emoji-face>
+                </ion-avatar>
+                <ion-label>
+                  <h1 class=""><strong>{{ todaysSummary.name }}</strong></h1>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list class="footer" lines="none" *ngIf="!isLoading; else elseLoadingCardFooter">
+              <ion-item lines="none" class="ion-no-padding" *ngIf="todaysSummary && todaysSummary.heartRate;">
+                <ion-icon name="pulse-outline" slot="start"></ion-icon>
+                <ion-label slot="start">
+                  <h3><strong>{{ todaysSummary.heartRate }} bpm</strong></h3>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+    <div class="row dashboard this-week">
+      <div class="col">
+        <h3>Mood this week</h3>
+        <ion-card mode="ios" ion-no-padding>
+          <ion-card-content ion-no-padding class="ion-no-padding">
+            <div class="week-summary" *ngIf="!isLoading; else elseLoadingThisWeek">
+              <div class="summary" (click)="onOpenTimeline()" matRipple [matRippleUnbounded]="true">
+                <h3 class="mood">{{currentWeek.name}}</h3>
+                <h1 class="percent">{{currentWeek.moodPercent}}%</h1>
+              </div>
+              <div echarts [options]="options" [loading]="isLoading" class="weekly-chart" (chartClick)="onChartClick($event);"></div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+    <div class="row dashboard this-week">
+      <div class="col">
+        <h3>Heart rate for the last 5 days</h3>
+        <ion-card mode="ios" >
+          <ion-card-content style="padding-top: 0!important;">
+            <ion-fab slot="fixed" vertical="top" horizontal="end">
+              <ion-fab-button size="small" 
+                (click)="heartRateLearnMoreModal.present()"
+                style="
+                  padding: 0!important;
+                  margin: 0!important;
+                  width: 30px;
+                  height: 30px;">
+                <ion-icon name="information-outline"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+            <div class="heart-rate-5days">
+              <div echarts class="weekly-chart" [loading]="isLoading" [options]="heartRateChartOptions" [loading]="isLoading" (chartClick)="onHeartRateChartClick($event, heartRateModal);"></div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+    <div class="row dashboard recommendation">
+      <div class="col">
+        <h4>Recommended activities</h4>
+        <ion-card mode="ios">
+          <ion-card-content>
+            <div class="chip-holder" *ngIf="recommendation && recommendation.length > 0">
+              <ion-chip #chip [outline]="true" *ngFor="let item of recommendation;" text-wrap [style]="item.style">{{item.value}}</ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+  
+  <ion-modal #moodModal [initialBreakpoint]="1" [breakpoints]="[0, 1]"
+    animated="true" swipeToClose="true"
+    class="mood-modal"
+    showBackdrop="true"
+    canDismiss="true"
+    handle="true"
+    handleBehavior="cycle"
+    backdropDismiss="true">
+    <ng-template>
+    <ion-header no-border no-shadow mode="md">
+      <ion-toolbar mode="md">
+        <ion-buttons slot="start">
+          <ion-button (click)="moodModal.dismiss()" >
+            <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary" ></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="ion-text-center">Mood</ion-title>
+        <div slot="end" style="width: 48px"></div>
+      </ion-toolbar>
+    </ion-header>
+      <ion-content>
+        <div class="view-mood-data">
+          <div class="data-holder">
+            <h1 class="percent" style="font-family: 'Roboto-Bold'!important">{{selected.moodPercent}}%</h1>
+            <h3>{{selected.name}} this week</h3>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-modal #heartRateModal [initialBreakpoint]="1" [breakpoints]="[0, 1]"
+    animated="true" swipeToClose="true"
+    class="heart-rate-modal"
+    showBackdrop="true"
+    canDismiss="true"
+    handle="true"
+    handleBehavior="cycle"
+    backdropDismiss="true">
+    <ng-template>
+    <ion-header no-border no-shadow mode="md">
+      <ion-toolbar mode="md">
+        <ion-buttons slot="start">
+          <ion-button (click)="heartRateModal.dismiss()" >
+            <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary" ></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="ion-text-center">Heart Rate</ion-title>
+        <div slot="end" style="width: 48px"></div>
+      </ion-toolbar>
+    </ion-header>
+      <ion-content>
+        <div class="view-heart-rate-data">
+          <div class="data-holder">
+            <h1 class="percent" style="font-family: 'Roboto-Bold'!important">{{selectedHeartRate.value}} BPM</h1>
+            <h3>{{selectedHeartRate.date}}</h3>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal 
+    #heartRateLearnMoreModal 
+    [initialBreakpoint]="0.80" 
+    [breakpoints]="[0, 0.80, 1]" 
+    class="heart-rate-learn-more-modal">
+    <ng-template>
+      <app-heart-rate-learn-more></app-heart-rate-learn-more>
+      <ion-footer>
+        <ion-toolbar>
+          <ion-button
+            mode="md"
+            type="submit"
+            expand="full"
+            shape="round"
+            color="danger"
+            size="default"
+            fill="outline"
+            style="height: 45px"
+            (click)="openHeartRate()"
+            >
+            Check my heart rate
+            <ion-icon slot="end" name="pulse-outline" style="font-size: 1.5em!important" ></ion-icon>
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      mode="md"
+      type="submit"
+      expand="full"
+      shape="round"
+      color="primary"
+      size="default"
+      style="height: 55px"
+      (click)="onOpenNewJournal()"
+      >
+      Check In
+      <ion-icon slot="end" name="checkmark-circle-outline" style="font-size: 1.5em!important" ></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+
+<!-- Progress & no record template -->
+<ng-template #elseLoadingCards>
+  <ion-list lines="none">
+    <ion-item detail="false" class="ion-no-padding">
+      <ion-avatar slot="start">
+        <ion-skeleton-text [animated]="true" style="height: 100%;"></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h4><ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text></h4>
+        <h3><strong><ion-skeleton-text [animated]="true" style="height: 20px;"></ion-skeleton-text></strong></h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ng-template>
+
+<ng-template #elseLoadingCardFooter>
+  <ion-list lines="none">
+    <ion-item lines="none" class="ion-no-padding">
+      <ion-skeleton-text [animated]="true" style="height: 100%;"></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+</ng-template>
+
+<ng-template #elseLoadingThisWeek>
+  <div style="
+  width: 100%;
+  height: 300px;
+  border-radius: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  padding: 10px;
+    ">
+    <ion-skeleton-text [animated]="true" style="height: 100%; margin: 10px;"></ion-skeleton-text>
+  </div>
+</ng-template>
+
+<ng-template #elseLoadingHeartRate>
+  <div style="
+  width: 100%;
+  height: 300px;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  padding: 10px;
+    ">
+    <ion-skeleton-text [animated]="true" style="height: 100%; margin: 10px;"></ion-skeleton-text>
+  </div>
+</ng-template>
+
+<ng-template #elseNoEntryToday>
+  <ion-item button detail="false" class="ion-no-padding">
+    <ion-label>
+      <h3>No entry for today</h3>
+      <br>
+      <ion-button fill="outline" size="default" 
+      (click)="onOpenNewJournal()">Check in</ion-button>
+    </ion-label>
+  </ion-item>
+</ng-template>
+
+<!-- Progress & no record template -->

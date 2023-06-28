@@ -1,0 +1,22 @@
+<ion-header class="new-journal" no-border no-shadow mode="md">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Journal</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" mode="md">
+  <div class="content">
+    <h1 class="title">Notes</h1>
+    <h3><app-date-formatter [date]="details?.timestamp" format="MMMM dd, yyyy hh:mm a"></app-date-formatter></h3>
+    <h3 class="paragraph">
+      <p>
+        {{details?.notes}}
+      </p>
+    </h3>
+  </div>
+</ion-content>

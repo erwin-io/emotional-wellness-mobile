@@ -1,0 +1,278 @@
+{
+    "reservationConfig": {
+        
+    },
+    "auth": {
+        "requireOTP": "false"
+    },
+    "sessionConfig": {
+      "sessionTimeout": "1800"
+    },
+    "heartRate": {
+        "captureInterval": 1000
+    },
+    "lookup": {
+    },
+    "apiEndPoints": {
+        "auth": {
+            "login": "auth/login",
+            "logout": "auth/logout",
+            "register":"auth/register",
+            "findByUsername": "auth/findByUsername/",
+            "refreshToken": "auth/refresh-token",
+            "verifyOtp": "auth/verifyOtp"
+        },
+        "user": {
+            "getById": "users/",
+            "updateUser": "users/",
+            "updateFirebaseToken": "users/updateFirebaseToken",
+            "changePassword": "users/changePassword",
+            "updateProfilePicture": "users/updateProfilePicture"
+        },
+        "dashboard": {
+            "getDashboard": "dashboard/getDashboard"
+        },
+        "notification": {
+            "getAllByUserIdPage": "notification/getAllByUserIdPage",
+            "getTotalUnreadByUserId": "notification/getTotalUnreadByUserId",
+            "updateReadStatus": "notification/updateReadStatus"
+        },
+        "journalEntry": {
+            "findByDate": "journal-entry/findByDate",
+            "getDateSummary": "journal-entry/getDateSummary",
+            "getWeeklySummary": "journal-entry/getWeeklySummary",
+            "getWeekly": "journal-entry/getWeekly",
+            "getById": "journal-entry/",
+            "add": "journal-entry/",
+            "update": "journal-entry/",
+            "delete": "journal-entry/"
+        },
+        "heartRateLog": {
+            "findByDate": "heart-rate-log/findByDate",
+            "getHeartRateStatus": "heart-rate-log/getHeartRateStatus",
+            "getById": "heart-rate-log/",
+            "add": "heart-rate-log/"
+        },
+        "moodSentiment": {
+            "getSentimentAnalysis": "mood-sentiment/getSentimentAnalysis"
+        }
+    },
+    "recommendation": [
+    {
+        "moodEntityId": 1,
+        "value": "Amazing"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Take a leisurely walk"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Practice gentle yoga or stretching"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Enjoy a calming bath"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Read a book"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Watch a cozy movie or TV show"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Engage in mindfulness or meditation"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Listen to calming music or nature sounds"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Engage in gentle hobbies"
+    },
+    {
+        "moodEntityId": 1,
+        "value": "Spend time in nature"
+    },
+    {
+        "moodEntityId": 1,
+        "value": " Practice deep breathing or progressive muscle relaxation"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Happy"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Practice mindfulness"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Embrace self-reflection"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Connect with your emotions"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Engage in activities that promote personal growth"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Practice self-care"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Set realistic expectations"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Practice gratitude"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Connect with others"
+    },
+    {
+        "moodEntityId": 2,
+        "value": "Seek personal fulfillment"
+    },
+    {
+        "moodEntityId": 2,
+        "value": " Embrace downtime"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Good"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Listen to uplifting music"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Watch a comedy show or movie"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Engage in physical activity"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Spend time with pets"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Engage in acts of kindness"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Engage in a favorite hobby"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Connect with loved ones"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Practice gratitude"
+    },
+    {
+        "moodEntityId": 3,
+        "value": "Treat yourself"
+    },
+    {
+        "moodEntityId": 3,
+        "value": " Explore nature"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Physical exercise"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Spend time in nature"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Connect with loved ones"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Engage in hobbies"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Listen to uplifting music"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Watch a comedy or uplifting movie"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Practice mindfulness or meditation"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Help others"
+    },
+    {
+        "moodEntityId": 4,
+        "value": "Engage in self-care"
+    },
+    {
+        "moodEntityId": 4,
+        "value": " Limit exposure to negative influences"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Angry"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Deep breathing exercises"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Physical exercise"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Practice relaxation techniques"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Engage in creative outlets"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Engage in a favorite hobby"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Practice mindfulness or meditation"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Take a break or timeout"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Listen to calming music"
+    },
+    {
+        "moodEntityId": 5,
+        "value": "Write in a journal"
+    },
+    {
+        "moodEntityId": 5,
+        "value": " Seek support"
+    }
+]
+}

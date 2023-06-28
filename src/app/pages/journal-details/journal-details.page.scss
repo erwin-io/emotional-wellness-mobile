@@ -1,0 +1,27 @@
+
+ion-header.new-journal::after {
+    background-image: none;
+  }
+
+.content {
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    .title {
+        font-weight: 900;
+        margin: 0!important;
+    }
+    .date {
+        font-size: 1.2em;
+    }
+    .paragraph {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+    ul {
+        padding-left: 30px;
+    }
+
+}

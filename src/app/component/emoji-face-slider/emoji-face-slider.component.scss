@@ -1,0 +1,71 @@
+.swiper-container {
+  width: 60%;
+  overflow: visible;
+  .emoji-type {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   .head {
+    scale: 0.5;
+    transition: all 0.3s;
+   }
+  }
+  &.touched {
+   .emoji-type {
+    .head {
+     scale: 0.5!important;
+    }
+   }
+  }
+  :not(.swiper-slide-active) {
+    .emoji-type {
+     .head {
+      opacity: 0.2;
+      // background: linear-gradient(135deg, rgb(255 255 255) 0%, rgb(135 135 135) 100%);
+      // box-shadow: rgb(157 157 157 / 50%) 0px 30px 30px 1px, rgb(245, 245, 245) 0px 20px 10px 1px;
+      // .face__amazing {
+      //   .eye-left,.eye-right { 
+      //     border-color: transparent transparent #c9c9c9 transparent;
+      //   }
+      //   .mouth { background-color: #c9c9c9; }
+      // }
+      // .face__happy {
+      //   .eye-left,.eye-right { 
+      //     background-color: #c9c9c9;
+      //   }
+      //   .mouth { 
+      //     border-color: transparent transparent #c9c9c9 transparent;
+      //   }
+      // }
+      // .face__normal {
+      //   .eye-left,.eye-right,.mouth { 
+      //     background-color: #c9c9c9;
+      //   }
+      // }
+      // .face__sad {
+      //   .eye-left,.eye-right { 
+      //     background-color: #c9c9c9;
+      //   }
+      //   .mouth { 
+      //     border-color: transparent transparent #c9c9c9 transparent;
+      //   }
+      // }
+      // .face__angry {
+      //   .eye-left,.eye-left:before,.eye-right,.eye-right:before { 
+      //     background-color: #c9c9c9;
+      //   }
+      //   .mouth { 
+      //     border-color: transparent transparent #c9c9c9 transparent;
+      //   }
+      // }
+     }
+    }
+  }
+  .swiper-slide-active {
+    .emoji-type {
+     .head {
+      scale: 0.8;
+     }
+    }
+  }
+}

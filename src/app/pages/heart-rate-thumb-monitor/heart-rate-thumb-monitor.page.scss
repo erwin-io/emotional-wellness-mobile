@@ -1,0 +1,212 @@
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: url("../../../assets/fonts/roboto/Roboto-Bold.ttf"); //change url accordingly
+  font-weight: normal;
+  font-style: normal;
+  }
+  @font-face {
+    font-family: 'Roboto-Medium';
+    src: url("../../../assets/fonts/roboto/Roboto-Medium.ttf"); //change url accordingly
+    font-weight: normal;
+    font-style: normal;
+    }
+    h1,h2,h3,h4,h5,span,p,label {
+    font-family: 'Roboto-Medium'!important;
+    font-smooth: always!important;
+    }
+
+ion-header.new-journal::after {
+  background-image: none;
+}
+
+::ng-deep .heart-rate-container {
+  display: flex;
+  height: 100%;
+  .start-mode {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .heart-container {
+      display: flex;
+      width: 100%;
+      height: 60% !important;
+      flex-direction: column;
+      align-items: center;
+      flex-wrap: nowrap;
+      justify-content: center;
+      .banner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .heart-button {
+        display: block;
+        align-items: center;
+        flex-direction: column;
+        transition: all 0.3s ease-in;
+        align-content: center;
+        font-size: auto;
+        flex-grow: 0;
+        width: 126px;
+        height: 126px;
+        display: flex;
+        justify-content: center;
+        background: transparent;
+        &:active {
+          scale: 0.9;
+        }
+        img {
+          display: flex;
+          width: 100%;
+          filter: drop-shadow(5px 15px 20px #ff4a79);
+          object-fit: contain;
+          opacity: 0.9;
+          height: 100%;
+        }
+      }
+    }
+    .help-container {
+      display: flex;
+      width: 100%;
+      height: 40% !important;
+      overflow: hidden;
+      flex-direction: column;
+      align-content: center;
+      align-items: center;
+      .instruction {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0 40px;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+      }
+    }
+  }
+  .result-mode {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    .date {
+      display: flex;
+      flex-grow: 0;
+      height: auto;
+      flex-direction: column;
+      line-height: 1;
+      * {
+        margin: 0 !important;
+      }
+    }
+    .value {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      h1 {
+        font-size: 6.5em;
+        display: flex;
+        flex-grow: 1;
+        margin: 0!important;
+        line-height: 1;
+        align-content: center;
+      }
+      span {
+        font-size: 1.5em;
+        line-height: 1;
+      }
+    }
+    .refresh {
+      display: flex;
+      height: auto;
+      position: relative;
+      margin-top: 10px;
+    }
+  }
+}
+
+::ng-deep .progress-modal {
+    
+  ion-header::after {
+    background-image: none;
+  }
+  .progress-ion-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    ion-card-content {
+      display: flex;
+      height: auto;
+      width: 100%;
+      .progress-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin: 0!important;
+        .desc {
+          width: 100%;
+          margin: 0!important;
+          margin-right: 25px!important;
+          line-height: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          font-weight: 400;
+        }
+        .progress-cicle {
+          display: flex;
+          margin: 0;
+          padding: 0;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          mat-progress-spinner {
+          }
+          .value {
+            position: absolute;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .progress-complete {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+  }
+
+}
+
+iframe {
+  width: 100%;
+  margin: 0!important;
+  padding: 0!important;
+  flex-grow: 1;
+  border: none!important;
+  outline: none;
+  display: flex;
+  &.hidden {
+    display: none;
+  }
+}
+
+.hidden {
+  display: none!important;
+}

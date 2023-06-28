@@ -1,0 +1,119 @@
+
+ion-header.new-journal::after {
+    background-image: none;
+  }
+
+  h1,h2,h3,h4,h5,p,i,span,label {
+    margin: 0;
+  }
+
+  .notes-placeholder {
+    margin-top: 40px;
+    border-radius: 50px!important;
+    ion-card-content {
+      padding: 15px 20px !important;
+      * {
+        margin: 0!important;
+      }
+    }
+    &.hidden {
+      display: none!important;
+    }
+  }
+  
+  .notes {
+    ion-card-content {
+      display: flex;
+      flex-direction: column;
+      .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .title {
+          width: 100%;
+        }
+      }
+      .details {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 20px!important;
+        * {
+          margin: 0!important;
+        }
+        .controls {
+          display: flex;
+          ion-button[shape=circle] {
+          }
+        }
+      }
+      .helper {    
+        color: #ffc409;
+        line-height: 1;
+      }
+    }
+  }
+
+  .heart-rate {
+    ion-card-content {
+      display: flex;
+      flex-direction: column;
+      .details {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 20px!important;
+        .value {
+          display: flex;
+          flex-grow: 1;
+          width: 100%;
+          flex-direction: column;
+          justify-content: center;
+          * {
+            margin: 0!important;
+          }
+        }
+        .controls {
+          display: flex;
+        }
+      }
+      .helper {    
+        color: #ffc409;
+        line-height: 1;
+      }
+    }
+  }
+
+  .notes-modal {
+    .notes-content {
+      ion-textarea {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        margin: 0!important;
+        flex-direction: column;
+        ::ng-deep .textarea-wrapper {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+          flex-grow: 1;
+          padding: 0!important;
+          margin: 0!important;
+          textarea {
+            margin: 0!important;
+            flex-grow: 1;
+            padding: 20px!important;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            font-size: 20px!important;
+          }
+          ::after {
+            display: none!important;
+          }
+        }
+      }
+    }
+  }

@@ -6,26 +6,28 @@ import { PageLoaderComponent } from 'src/app/component/page-loader/page-loader.c
   providedIn: 'root'
 })
 export class PageLoaderService {
-  private modal: HTMLIonModalElement;
+  modal: HTMLIonModalElement;
   constructor(private modalCtrl: ModalController) {}
 
   async open(message) {
     if(this.modal){
-      await this.modal.dismiss();
+      this.modal.componentProps = { message };
+      return;
     }
     this.modal = await this.modalCtrl.create({
       component: PageLoaderComponent,
       id: 'page-loader',
       cssClass: 'modal-fullscreen',
-      canDismiss: false,
+      canDismiss: true,
       componentProps: {
         message
       },
     }, );
-    this.modal.present();
+    await this.modal.present();
   }
   async close() {
-    this.modal.canDismiss = true;
-    await this.modal.dismiss();
+    if(this.modal){
+      await this.modal.dismiss();
+    }
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Injectable } from '@angular/core';
 import { Notifications } from '../model/notification.model';
 import { environment } from 'src/environments/environment';
@@ -14,10 +15,10 @@ export class NotificationService {
 
   constructor(private http: HttpClient, private appconfig: AppConfigService) { }
 
-  getAllByCustomerIdPage(params: any): Observable<ApiResponse<{ items: Notifications[]; meta: any }>> {
+  getAllByUserIdPage(params: any): Observable<ApiResponse<{ items: Notifications[]; meta: { currentPage: number; totalItems: number; totalPages: number} }>> {
     return this.http
       .get<any>(
-        environment.apiBaseUrl + this.appconfig.config.apiEndPoints.notification.getAllByCustomerIdPage,
+        environment.apiBaseUrl + this.appconfig.config.apiEndPoints.notification.getAllByUserIdPage,
         {params}
       )
       .pipe(
@@ -26,10 +27,10 @@ export class NotificationService {
       );
   }
 
-  getTotalUnreadByCustomerId(params: any): Observable<ApiResponse<{ total: number }>> {
+  getTotalUnreadByUserId(params: any): Observable<ApiResponse<{ total: number }>> {
     return this.http
       .get<any>(
-        environment.apiBaseUrl + this.appconfig.config.apiEndPoints.notification.getTotalUnreadByCustomerId,
+        environment.apiBaseUrl + this.appconfig.config.apiEndPoints.notification.getTotalUnreadByUserId,
         {params}
       )
       .pipe(

@@ -9,4 +9,11 @@ export class Notifications {
   isReminder: boolean;
   isRead: boolean;
   user: User;
+  notificationType: NotificationType;
 }
+
+export class NotificationType {
+  notificationTypeId: string;
+  name: string;
+}
+

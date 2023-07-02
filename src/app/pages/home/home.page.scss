@@ -42,7 +42,30 @@ ion-header::after {
 }
 ::ng-deep ion-footer {
   ion-toolbar {
-    box-shadow: 10px 20px #888888!important;
+    ::ng-deep .footer-controls {
+      width: 100%;
+      margin-right: 10px;
+    }
+    ::ng-deep .profile-toolbar {
+      box-sizing: border-box;
+      height: 48px;
+      min-width: 48px;
+      ion-avatar {
+        width: 100%;
+        height: 100%;
+        img {
+          object-position: center;
+          object-fit: contain;
+          box-shadow: 0 0 10px 0 rgb(122 122 122 / 46%);
+          border-radius: 100%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
   }
 }
 .content {

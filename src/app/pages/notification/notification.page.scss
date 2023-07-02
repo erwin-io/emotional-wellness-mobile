@@ -22,13 +22,14 @@ ion-header::after {
     text-overflow: unset;
     white-space: unset;
     overflow: unset;
-    title {
+    .title {
       -webkit-line-clamp: 2;
     }
-    desc {
+    .desc {
+      font-size: 1em;
       -webkit-line-clamp: 4;
     }
-    h3, p {
+    h1, h3, p {
       margin: 0 !important;
       display: -webkit-box;
       max-width: 100%;

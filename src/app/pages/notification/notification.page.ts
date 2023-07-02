@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
@@ -13,6 +15,12 @@ import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { forkJoin } from 'rxjs';
 import * as moment from 'moment';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { TimelinePage } from '../timeline/timeline.page';
+import { JournalEntrySummary } from 'src/app/core/model/journal-entry.model';
+import { HeartRateLog } from 'src/app/core/model/heart-rate-logs.model';
+import { HeartRateThumbMonitorPage } from '../heart-rate-thumb-monitor/heart-rate-thumb-monitor.page';
+import { AnimationService } from 'src/app/core/services/animation.service';
 
 @Component({
   selector: 'app-notification',
@@ -26,8 +34,11 @@ export class NotificationPage implements OnInit {
   isLoading = false;
   error: any;
   refreshEvent: any;
+  todaysSummary: JournalEntrySummary;
+  lastHeartRateRecord: HeartRateLog;
   currentPage = 1;
   limit = 10;
+  totalItems = 0;
   totalUnreadNotification = 0;
   constructor(
     private modalCtrl: ModalController,
@@ -35,6 +46,8 @@ export class NotificationPage implements OnInit {
     private pageLoaderService: PageLoaderService,
     private alertController: AlertController,
     private notificationService: NotificationService,
+    private authService: AuthService,
+    private animationService: AnimationService,
     private storageService: StorageService,
     private actionSheetCtrl: ActionSheetController) {
       this.currentUser = this.storageService.getLoginUser();
@@ -44,14 +57,31 @@ export class NotificationPage implements OnInit {
 
   ngOnInit() {
   }
+  
+  get isAuthenticated() {
+    const currentUser = this.storageService.getLoginUser();
+    return currentUser &&
+    currentUser.userId &&
+    currentUser.accessToken &&
+    currentUser.userId !== '' &&
+    currentUser.accessToken !== '';
+  }
 
-  async initNotification(customerId: string){
+  async initNotification(userId: string){
     this.isLoading = true;
-    const result = await forkJoin([]).toPromise();
+    const result = await forkJoin([
+      this.notificationService.getAllByUserIdPage({ userId, page: this.currentPage, limit: this.limit }),
+      this.notificationService.getTotalUnreadByUserId({userId}),
+    ]).toPromise();
     // do things
-    this.data = [];
-    this.totalUnreadNotification = 0;
+    this.data = [ ...this.data, ...result[0].data.items ];
+    this.totalItems = result[0].data.meta.totalItems;
+    this.totalUnreadNotification = result[1].data.total;
     this.storageService.saveTotalUnreadNotif(this.totalUnreadNotification);
+    if(this.refreshEvent) {
+      this.refreshEvent.target.complete();
+      this.refreshEvent = null;
+    }
     this.isLoading = false;
   }
 
@@ -64,10 +94,10 @@ export class NotificationPage implements OnInit {
     }
   }
 
-  async getTotalUnreadNotif(customerId: string){
+  async getTotalUnreadNotif(userId: string){
     try {
       this.isLoading = true;
-      this.notificationService.getTotalUnreadByCustomerId(customerId).subscribe((res)=> {
+      this.notificationService.getTotalUnreadByUserId(userId).subscribe((res)=> {
         if(res.success){
           console.log(res.data);
           this.totalUnreadNotification = res.data.total;
@@ -109,10 +139,6 @@ export class NotificationPage implements OnInit {
     this.currentPage = 1;
     this.refreshEvent = event;
     await this.initNotification(this.currentUser.userId);
-    if(this.refreshEvent) {
-      this.refreshEvent.target.complete();
-      this.refreshEvent = null;
-    }
  }
 
   async presentAlert(options: any) {
@@ -148,6 +174,50 @@ export class NotificationPage implements OnInit {
         buttons: ['OK']
       });
     }
+  }
+
+  async onOpenTimeline(notifDetails: Notifications) {
+    if(!this.isAuthenticated) {
+      this.authService.logout();
+    }
+    let modal: any = null;
+    modal = await this.modalCtrl.create({
+      component: TimelinePage,
+      cssClass: 'modal-fullscreen',
+      backdropDismiss: false,
+      canDismiss: true,
+      mode: "ios",
+      componentProps: { modal, todaysSummary: this.todaysSummary, currentSelected: notifDetails.date },
+    });
+    modal.onWillDismiss().then(async () => {
+      if(!this.data.filter(x=>x.notificationId === notifDetails.notificationId)[0].isRead) {
+        await this.markNotifAsRead(notifDetails);
+      }
+    });
+    modal.present();
+  }
+  
+  async openHeartRate(notifDetails) {
+    if(!this.isAuthenticated) {
+      this.authService.logout();
+    }
+
+    let modal: any = null;
+    modal = await this.modalCtrl.create({
+      component: HeartRateThumbMonitorPage,
+      cssClass: 'modal-fullscreen',
+      backdropDismiss: false,
+      canDismiss: true,
+      enterAnimation: this.animationService.pushLeftAnimation,
+      leaveAnimation: this.animationService.leavePushLeftAnimation,
+      componentProps: { modal, lastRecord: this.lastHeartRateRecord },
+    });
+    modal.onWillDismiss().then(async (res: { data: HeartRateLog; role: string }) => {
+      if (res.data && res.role === 'confirm') {
+        await this.markNotifAsRead(notifDetails);
+      }
+    });
+    modal.present();
   }
 
   ionViewWillEnter(){

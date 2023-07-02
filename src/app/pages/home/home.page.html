@@ -1,16 +1,19 @@
 <ion-header no-border no-shadow>
+  
+  <ion-toolbar mode="md">
+    <ion-title class="ion-text-center">
+      <h4><p>The demo account will expire in 5 hours. </p></h4>
+    </ion-title>
+  </ion-toolbar>
+
   <ion-toolbar mode="md">
     <div slot="start" class="profile-toolbar">
       <ion-avatar (click)="onShowSettings()">
-        <img alt="Silhouette of a person's head"  [src]="user.userProfilePic" (error)="profilePicErrorHandler($event)" />
+        <img alt="profile" [src]="user.userProfilePic" (error)="profilePicErrorHandler($event)" />
       </ion-avatar>
     </div>
-    <ion-title class="ion-text-center">Home({{env}})</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="onShowNotif()">  
-        <ion-icon color="primary" slot="icon-only" name="notifications-sharp"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title class="ion-text-center">Home</ion-title>
+    <div slot="end" style="width: 48px"></div>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding" mode="md">
@@ -90,7 +93,7 @@
               </ion-fab-button>
             </ion-fab>
             <div class="heart-rate-5days">
-              <div echarts class="weekly-chart" [loading]="isLoading" [options]="heartRateChartOptions" [loading]="isLoading" (chartClick)="onHeartRateChartClick($event, heartRateModal);"></div>
+              <div echarts class="weekly-chart" [options]="heartRateChartOptions" [loading]="isLoading" (chartClick)="onHeartRateChartClick($event, heartRateModal);"></div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -203,23 +206,41 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button
-      mode="md"
-      type="submit"
-      expand="full"
-      shape="round"
-      color="primary"
-      size="default"
-      style="height: 55px"
-      (click)="onOpenNewJournal()"
-      >
-      Check In
-      <ion-icon slot="end" name="checkmark-circle-outline" style="font-size: 1.5em!important" ></ion-icon>
-    </ion-button>
+    <div slot="start" class="footer-controls">
+      <ion-button
+        mode="md"
+        type="submit"
+        expand="full"
+        shape="round"
+        color="primary"
+        size="default"
+        style="height: 55px"
+        (click)="onOpenNewJournal()"
+        >
+        Check In
+        <ion-icon slot="end" name="checkmark-circle-outline" style="font-size: 1.5em!important" ></ion-icon>
+      </ion-button></div>
+    <div slot="end" class="profile-toolbar" style="min-width: 48px">
+      <ion-badge style="
+          display: flex;
+          position: absolute;
+          right: 0;
+          top: 0;
+          border-radius: 100%;
+          width: 25px;
+          height: 25px;
+          flex-direction: column;
+          align-items: center;
+          font-size: 0.8em;
+          justify-content: center;
+          overflow: visible!important;" 
+          color="danger" *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification > 99 ? '99+' : totalUnreadNotification}}</ion-badge>
+      <ion-avatar (click)="onShowSettings()">
+        <img alt="profile" [src]="user.userProfilePic" (error)="profilePicErrorHandler($event, 'pet')" />
+      </ion-avatar>
+    </div>
   </ion-toolbar>
 </ion-footer>
-
-
 <!-- Progress & no record template -->
 <ng-template #elseLoadingCards>
   <ion-list lines="none">

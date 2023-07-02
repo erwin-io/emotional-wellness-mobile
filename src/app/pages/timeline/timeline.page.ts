@@ -51,9 +51,6 @@ export class TimelinePage implements OnInit {
     private storageService: StorageService) {
       this.generateWeeks(this.currentSelected);
       console.log(this.weeks);
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        this.close();
-      });
       this.animation.enterAnimation = this.animationService.flyUpAnimation;
       this.animation.leaveAnimation = this.animationService.leaveFlyUpAnimation;
      }

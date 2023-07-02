@@ -14,9 +14,6 @@ export class ImageViewerPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private platform: Platform) {
-    this.platform.backButton.subscribeWithPriority(-1, () => {
-      this.close();
-    });
   }
 
   ngOnInit() {

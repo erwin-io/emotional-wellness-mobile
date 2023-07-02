@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "254255626739",
-    "project_id": "tailor-booking-app",
-    "storage_bucket": "tailor-booking-app.appspot.com"
+    "project_number": "881747511392",
+    "project_id": "emotional-wellness-9969b",
+    "storage_bucket": "emotional-wellness-9969b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:254255626739:android:924c02f117dd94328f3a86",
+        "mobilesdk_app_id": "1:881747511392:android:b7907294c4ec9231069b05",
         "android_client_info": {
           "package_name": "com.emotionalwellness.mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "254255626739-pnc7pbgos4ln735kefgggnj7imjlvimn.apps.googleusercontent.com",
+          "client_id": "881747511392-k22lu1mblv61ekp2forkqrj4doouiajk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCeMdBQ8LNv43HAMvazK391bO6wZkHxV3U"
+          "current_key": "AIzaSyAcBWgILoWYYkvLxGbKhuRAAoe3CgGpGV8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "254255626739-pnc7pbgos4ln735kefgggnj7imjlvimn.apps.googleusercontent.com",
+              "client_id": "881747511392-k22lu1mblv61ekp2forkqrj4doouiajk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

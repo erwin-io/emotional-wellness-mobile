@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable one-var */
@@ -8,9 +9,10 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/quotes */
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { App } from '@capacitor/app';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, AlertController, AnimationController, IonModal } from '@ionic/angular';
+import { ActionSheetController, ModalController, AlertController, AnimationController, IonModal, Platform } from '@ionic/angular';
 import { forkJoin } from 'rxjs';
 import { Notifications } from 'src/app/core/model/notification.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -60,9 +62,11 @@ export class HomePage implements OnInit {
 
   @ViewChild("moodModal") moodModal: IonModal;
   constructor(
+    private platform: Platform,
     private router: Router,
     private authService: AuthService,
     private modalCtrl: ModalController,
+    private actionSheetController: ActionSheetController,
     private journalEntryService: JournalEntryService,
     private heartRateLogService: HeartRateLogService,
     private notificationService: NotificationService,
@@ -96,6 +100,11 @@ export class HomePage implements OnInit {
     return this.storageService.getLoginUser();
   }
 
+  get totalUnreadNotification() {
+    const total = this.storageService.getTotalUnreadNotif();
+    return total? total : 0;
+  }
+
   async initDashboard(){
     this.isLoading = true;
     forkJoin(
@@ -111,9 +120,13 @@ export class HomePage implements OnInit {
       this.heartRateLogService.findByDate({
         dateFrom: moment(new Date(new Date().setDate(new Date().getDate() - 4))).format("YYYY-MM-DD"),
         dateTo: moment(new Date()).format("YYYY-MM-DD")
-      })
+      }),
+      this.notificationService.getTotalUnreadByUserId({userId: this.currentUser.userId})
   ).subscribe(
-      ([todaysSummary, yesterdaysSummary, getWeeklySummary, heartRate]) => {
+      ([todaysSummary, yesterdaysSummary, getWeeklySummary, heartRate, getTotalUnreadByUserId]) => {
+        
+        this.storageService.saveTotalUnreadNotif(getTotalUnreadByUserId.data.total);
+
         this.todaysSummary = todaysSummary && todaysSummary.data ? todaysSummary.data : null;
         this.yesterdaysSummary = yesterdaysSummary && yesterdaysSummary.data ? yesterdaysSummary.data : null;
         this.currentWeek = getWeeklySummary && getWeeklySummary.data ? getWeeklySummary.data : null;
@@ -261,7 +274,8 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
   }
-
+    
+  
   async onShowSettings() {
 
     if(!this.isAuthenticated) {
@@ -293,7 +307,7 @@ export class HomePage implements OnInit {
       canDismiss: true,
       enterAnimation: this.animationService.pushLeftAnimation,
       leaveAnimation: this.animationService.leavePushLeftAnimation,
-      componentProps: { modal },
+      componentProps: { modal, todaysSummary: this.todaysSummary, lastHeartRateRecord: { heartRateLogId: this.todaysSummary.lastHeartRateLogId, value: this.todaysSummary.heartRate, timestamp: this.todaysSummary.timestamp } },
     });
     modal.present();
   }
@@ -394,8 +408,14 @@ export class HomePage implements OnInit {
     }
   }
 
-  profilePicErrorHandler(event) {
-    event.target.src = '../../../assets/img/profile-not-found.png';
+  profilePicErrorHandler(event, type?) {
+    if(!type || type === undefined) {
+      event.target.src = '../../../assets/img/profile-not-found.png';
+    } else if(type === "pet") {
+      event.target.src = '../../../assets/img/pet-default.png';
+    } else {
+      event.target.src = '../../../assets/img/profile-not-found.png';
+    }
   }
 
   async presentAlert(options: any) {

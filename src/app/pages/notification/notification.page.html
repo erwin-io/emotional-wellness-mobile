@@ -17,6 +17,27 @@
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="!isLoading; else elseLoading">
+    <ion-list *ngIf="data.length > 0; else elseNoData">
+      <ion-item [color]="item.isRead ? '':'light'" *ngFor="let item of data"  button detail="true" [ngClass]="{'un-read': item.isRead}" (click)="item.notificationType.notificationTypeId === '1' ? onOpenTimeline(item) : openHeartRate(item)">
+        <ion-icon name="notifications-outline" slot="start"></ion-icon>
+        <ion-label>
+          <div *ngIf="item.isRead; else elseUnRead">
+            <h1 class="title">{{item.title}}</h1>
+            <h3><p class="desc">{{item.description}}</p></h3>
+            <br>
+            <h3><p class="desc" >{{item.date | timeAgo}}</p></h3>
+          </div>
+          <ng-template #elseUnRead >
+            <div>
+              <h3 class="title"><strong>{{item.title}}</strong></h3>
+              <p>{{item.description}}</p>
+              <p style="color:#4DB6AC"><strong>{{item.date | timeAgo}}</strong></p>
+            </div>
+          </ng-template>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button *ngIf="data && data.length >= limit && data.length < totalItems" fill="clear" size="small" expand="full" (click)="loadMore()">Load more...</ion-button>
   </div>
   <ng-template #elseLoading >
     <ion-list>

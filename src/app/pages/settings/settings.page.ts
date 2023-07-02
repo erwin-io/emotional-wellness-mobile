@@ -44,9 +44,6 @@ export class SettingsPage implements OnInit {
     private alertController: AlertController
   ) {
     this.user = this.storageService.getLoginUser();
-    this.platform.backButton.subscribeWithPriority(-1, () => {
-      this.close();
-    });
   }
 
   ngOnInit() {}
@@ -85,8 +82,25 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  signout() {
-    this.authService.logout();
+  async signout() {
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [
+        {
+          text: 'Logout?',
+          handler: async () => {
+            this.authService.logout();
+            actionSheet.dismiss();
+          },
+        },
+        {
+          text: 'Cancel',
+          handler: async () => {
+            actionSheet.dismiss();
+          },
+        },
+      ],
+    });
+    await actionSheet.present();
   }
 
   ionViewWillEnter() {}

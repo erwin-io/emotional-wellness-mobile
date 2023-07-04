@@ -297,3 +297,17 @@ ion-button.in-toolbar.button-has-icon-only {
   stroke-width: 10;
   stroke-linecap: round;
 }
+.modal-wrapper{
+  background: transparent !important;
+}
+
+ion-modal {
+  &.transaparent {
+    --background: transparent !important;
+    ion-header {
+      --background: transparent !important;
+    }
+  }
+  }
+
+  

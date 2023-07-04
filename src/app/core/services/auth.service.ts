@@ -50,7 +50,7 @@ export class AuthService implements IServices {
     this.storageService.saveLoginUser(null);
     // this.storageService.saveSessionExpiredDate(null);
     this.storageService.saveTotalUnreadNotif(0);
-    window.location.href = 'login';
+    window.location.href = 'landing-page';
     return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.logout)
     .pipe(
       tap(_ => this.isLoggedIn = false),

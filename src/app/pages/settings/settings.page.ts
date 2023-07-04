@@ -127,7 +127,6 @@ export class SettingsPage implements OnInit {
   }
 
   async onChangeProfilePic() {
-    return;
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'sched-card-action-sheet',
       buttons: [
@@ -234,7 +233,7 @@ export class SettingsPage implements OnInit {
             console.log(res);
             this.isSubmitting = false;
             this.user.gender = res.data.gender;
-            this.user.userProfilePic = res.data.user.userProfilePic.file.url;
+            this.user.userProfilePic = res.data.userProfilePic.file.url;
             this.storageService.saveLoginUser(this.user);
           } else {
             this.isSubmitting = false;

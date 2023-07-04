@@ -53,7 +53,7 @@ export class HeartRateThumbMonitorPage implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log(this.lastRecord);
-    if(!this.lastRecord) {
+    if(!this.lastRecord || !this.lastRecord.value || this.lastRecord.value === '') {
       this.mode  = 'start';
     } else {
       this.mode  = 'result';

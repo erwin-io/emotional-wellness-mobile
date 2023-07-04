@@ -38,12 +38,8 @@ export class ProfileSettingsPage implements OnInit {
 
   get isFormDirty() {
     return (
-      this.user.firstName !== this.formData.firstName ||
-      this.user.middleName !== this.formData.middleName ||
-      this.user.lastName !== this.formData.lastName ||
-      this.user.email !== this.formData.email ||
+      this.user.name !== this.formData.name ||
       this.user.mobileNumber !== this.formData.mobileNumber ||
-      this.user.address !== this.formData.address ||
       moment(this.user.birthDate).format('YYYY-MM-DD') !== moment(this.formData.birthDate).format('YYYY-MM-DD') ||
       this.user.gender.genderId !== this.formData.genderId
     );
@@ -55,12 +51,8 @@ export class ProfileSettingsPage implements OnInit {
 
   ngOnInit() {
     this.editProfileForm = this.formBuilder.group({
-      firstName : [this.user.firstName, Validators.required],
-      middleName : [this.user.middleName],
-      lastName : [this.user.lastName, Validators.required],
-      email : [this.user.email, Validators.required],
+      name : [this.user.name, Validators.required],
       mobileNumber : [this.user.mobileNumber, Validators.required],
-      address : [this.user.address, Validators.required],
       birthDate : [new Date(this.user.birthDate).toISOString(), Validators.required],
       genderId : [this.user.gender.genderId, Validators.required]
     });
@@ -113,13 +105,8 @@ export class ProfileSettingsPage implements OnInit {
               buttons: ['OK'],
             });
             this.isSubmitting = false;
-            this.user.firstName = res.data.firstName;
-            this.user.middleName = res.data.middleName;
-            this.user.lastName = res.data.lastName;
-            this.user.fullName = res.data.fullName;
-            this.user.email = res.data.email;
+            this.user.name = res.data.name;
             this.user.mobileNumber = res.data.mobileNumber;
-            this.user.address = res.data.address;
             this.user.birthDate = res.data.birthDate;
             this.user.gender = res.data.gender;
             this.storageService.saveLoginUser(this.user);

@@ -1,10 +1,11 @@
 <ion-content>
-  <div class="wrapper">
+  <div class="wrapper" *ngIf="!isLoading">
     <div class="banner">
       <img src="../../../assets/img/app_banner.png  ">
     </div>
     <div class="controls">
-      <ion-button shape="round" (click)="onGetStarted()" size="large">Get Started</ion-button>
+      <ion-button shape="round" (click)="onOpenSignUp()" size="large">Create account</ion-button>
+      <ion-button shape="round" (click)="onOpenLogin()" size="large" fill="outline">Login</ion-button>
     </div>
   </div>
 </ion-content>

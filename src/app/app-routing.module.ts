@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guard/auth.guard';
@@ -35,7 +36,7 @@ const routes: Routes = [
   },
   {
     path: 'signup',
-    loadChildren: () => import('./pages/auth/register/register.module').then( m => m.RegisterPageModule),
+    loadChildren: () => import('./pages/auth/signup/signup.module').then( m => m.SignupPageModule),
     data: {
       auth: true
     }
@@ -55,14 +56,19 @@ const routes: Routes = [
   {
     path: 'timeline',
     loadChildren: () => import('./pages/timeline/timeline.module').then( m => m.TimelinePageModule)
-  },  {
+  },
+  {
     path: 'heart-rate-thumb-monitor',
     loadChildren: () => import('./pages/heart-rate-thumb-monitor/heart-rate-thumb-monitor.module').then( m => m.HeartRateThumbMonitorPageModule)
   },
   {
     path: 'journal-details',
     loadChildren: () => import('./pages/journal-details/journal-details.module').then( m => m.JournalDetailsPageModule)
+  },  {
+    path: 'pet-companion',
+    loadChildren: () => import('./pages/pet-companion/pet-companion.module').then( m => m.PetCompanionPageModule)
   }
+
 
 
 

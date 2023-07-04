@@ -55,6 +55,9 @@
         },
         "moodSentiment": {
             "getSentimentAnalysis": "mood-sentiment/getSentimentAnalysis"
+        },
+        "pet": {
+            "update": "pet/"
         }
     },
     "recommendation": [

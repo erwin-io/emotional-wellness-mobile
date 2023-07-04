@@ -2,16 +2,17 @@ import { Gender } from './gender.model';
 
 export class User {
   userId: string;
-  username: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  email: string;
+  name: string;
   mobileNumber: string;
-  address: string;
-  fullName: string;
   gender: Gender;
   birthDate: string;
   age: string;
   userProfilePic: any;
+  pet: any;
+}
+
+
+export class Pet {
+  name: string;
+  profilePicFile: any;
 }

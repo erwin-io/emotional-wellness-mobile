@@ -12,69 +12,24 @@
 
 <ion-content class="ion-padding" mode="md">
   <form
-  id="petForm"
+  id="editProfileForm"
   [formGroup]="editProfileForm"
   (ngSubmit)="editProfileForm.valid ? onSubmit() : false">
     <fieldset [disabled]="isSubmitting">
       <div class="form-field-group">
-        <mat-label>First name</mat-label>
+        <mat-label>Name</mat-label>
         <mat-form-field appearance="outline">
-          <mat-label>First name</mat-label>
+          <mat-label>Name</mat-label>
           <input
             matInput
             type="text"
-            placeholder="First name"
-            formControlName="firstName"
-            autocomplete="new-firstName"
+            placeholder="Name"
+            formControlName="name"
+            autocomplete="new-name"
           />
         </mat-form-field>
-        <span class="error" *ngIf="errorControls.firstName.touched && errorControls.firstName.errors && errorControls.firstName.errors.required">
-          First name is required
-        </span>
-      </div>
-      <div class="form-field-group">
-        <mat-label>Middle name</mat-label>
-        <mat-form-field appearance="outline">
-          <mat-label>Middle name</mat-label>
-          <input
-            matInput
-            type="text"
-            placeholder="Middle name"
-            formControlName="middleName"
-            autocomplete="new-middleName"
-          />
-        </mat-form-field>
-      </div>
-      <div class="form-field-group">
-        <mat-label>Last name</mat-label>
-        <mat-form-field appearance="outline">
-          <mat-label>Last name</mat-label>
-          <input
-            matInput
-            type="text"
-            placeholder="Last name"
-            formControlName="lastName"
-            autocomplete="new-lastName"
-          />
-        </mat-form-field>
-        <span class="error" *ngIf="errorControls.lastName.touched && errorControls.lastName.errors && errorControls.lastName.errors.required">
-          Last name is required
-        </span>
-      </div>
-      <div class="form-field-group">
-        <mat-label>Email</mat-label>
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="text"
-            placeholder="Email"
-            formControlName="email"
-            autocomplete="new-email"
-          />
-        </mat-form-field>
-        <span class="error" *ngIf="errorControls.email.touched && errorControls.email.errors && errorControls.email.errors.required">
-          Email is required
+        <span class="error" *ngIf="errorControls.name.touched && errorControls.name.errors && errorControls.name.errors.required">
+          Name is required
         </span>
       </div>
       <div class="form-field-group">
@@ -91,21 +46,6 @@
         </mat-form-field>
         <span class="error" *ngIf="errorControls.mobileNumber.touched && errorControls.mobileNumber.errors && errorControls.mobileNumber.errors.required">
           Mobile number is required
-        </span>
-      </div>
-      <div class="form-field-group">
-        <mat-label>Address</mat-label>
-        <mat-form-field appearance="outline">
-          <mat-label>Address</mat-label>
-          <textarea
-            matInput
-            type="text"
-            placeholder="Address"
-            formControlName="address"
-          ></textarea>
-        </mat-form-field>
-        <span class="error" *ngIf="errorControls.address.touched && errorControls.address.errors && errorControls.address.errors.required">
-          Address is required
         </span>
       </div>
       <div class="form-field-group">
@@ -140,13 +80,19 @@
     </fieldset>
   </form>
 </ion-content>
-<div class="controls-bottom">
-  <ion-button 
-    mode="md"
-    type="submit"
-    mat-flat-button
-    color="primary"
-    form="petForm"
-    [disabled]="!isFormDirty || isSubmitting"
-    >Update</ion-button>
-</div>
+<ion-footer>
+  <ion-toolbar 
+  mode="md">
+    <ion-button
+      mode="md"
+      type="submit"
+      expand="full"
+      shape="round"
+      size="large"
+      color="primary"
+      form="editProfileForm"
+      [disabled]="!isFormDirty || isSubmitting">
+    Update
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>

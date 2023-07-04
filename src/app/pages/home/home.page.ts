@@ -38,6 +38,7 @@ import { HeartRateLogService } from 'src/app/core/services/heart-rate-log.servic
 import { HeartRateLog } from 'src/app/core/model/heart-rate-logs.model';
 import { HeartRateThumbMonitorPage } from '../heart-rate-thumb-monitor/heart-rate-thumb-monitor.page';
 import { environment } from 'src/environments/environment';
+import { PetCompanionPage } from '../pet-companion/pet-companion.page';
 
 
 @Component({
@@ -381,6 +382,29 @@ export class HomePage implements OnInit {
     modal.onWillDismiss().then((res: { data: HeartRateLog; role: string }) => {
       if (res.data && res.role === 'confirm') {
       }
+    });
+    modal.present();
+  }
+  
+  async onShowPetCompanion() {
+
+    if(!this.isAuthenticated) {
+      this.authService.logout();
+    }
+    let modal: any = null;
+    modal = await this.modalCtrl.create({
+      component: PetCompanionPage,
+      cssClass: ['transaparent','modal-fullscreen'],
+      backdropDismiss: false,
+      canDismiss: true,
+      enterAnimation: this.animationService.flyUpAnimation,
+      leaveAnimation: this.animationService.leaveFlyUpAnimation,
+      componentProps: { 
+        modal,
+        todaysSummary: this.todaysSummary, 
+        lastHeartRateRecord: { heartRateLogId: this.todaysSummary.lastHeartRateLogId, value: this.todaysSummary.heartRate, timestamp: this.todaysSummary.timestamp },
+
+       },
     });
     modal.present();
   }

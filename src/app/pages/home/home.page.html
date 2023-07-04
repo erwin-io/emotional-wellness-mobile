@@ -24,7 +24,7 @@
   <div class="content">
     <div class="col welcome">
       <div class="row name">
-        <h1>{{'Welcome Back'}}, {{ user.firstName }}!</h1>
+        <h1>{{'Welcome Back'}}, {{ user.name }}!</h1>
       </div>
       <div class="row description">
         <h3>Let's track your mood today.</h3>
@@ -214,7 +214,6 @@
         shape="round"
         color="primary"
         size="default"
-        style="height: 55px"
         (click)="onOpenNewJournal()"
         >
         Check In
@@ -224,7 +223,7 @@
       <ion-badge style="
           display: flex;
           position: absolute;
-          right: 0;
+          right: 0; 
           top: 0;
           border-radius: 100%;
           width: 25px;
@@ -235,8 +234,8 @@
           justify-content: center;
           overflow: visible!important;" 
           color="danger" *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification > 99 ? '99+' : totalUnreadNotification}}</ion-badge>
-      <ion-avatar (click)="onShowSettings()">
-        <img alt="profile" [src]="user.userProfilePic" (error)="profilePicErrorHandler($event, 'pet')" />
+      <ion-avatar (click)="onShowPetCompanion()">
+        <img alt="profile" [src]="user.pet.profilePicFile" (error)="profilePicErrorHandler($event, 'pet')" />
       </ion-avatar>
     </div>
   </ion-toolbar>

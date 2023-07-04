@@ -1,0 +1,109 @@
+
+<ion-content>
+  <div class="modal-container">
+    <div class="dialog">
+      <ion-avatar class="pet-bubble" (click)="editPetModal.present();petProfilePicFile.url = user.pet.profilePicFile;" matRipple>
+        <img alt="profile" [src]="user.pet.profilePicFile" (error)="profilePicErrorHandler($event, 'pet')" />
+      </ion-avatar>
+      <div class="menu">
+        <div class="menu-header">
+          <h1 class="message">Hi!, My name is {{user.pet.name}}, how may I help you today?</h1>
+        </div>
+        <div class="menu-body">
+          <div matRipple class="item-holder" (click)="onShowNotif()">
+            <ion-item  fill="outline" lines="none">
+              <ion-icon name="notifications-outline" slot="start"></ion-icon>
+              <ion-label>Notifications</ion-label>
+              <ion-label slot="end"><h3 class="count" *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification > 99 ? '99+' : totalUnreadNotification}}>1</h3></ion-label>
+            </ion-item>
+          </div>
+          <div matRipple class="item-holder" (click)="onOpenTimeline()">
+            <ion-item  fill="outline" lines="none">
+              <ion-icon name="time-outline" slot="start"></ion-icon>
+              <ion-label>Timeline</ion-label>
+            </ion-item>
+          </div>
+          <div matRipple class="item-holder" (click)="openHeartRate()">
+            <ion-item  fill="outline" lines="none">
+              <ion-icon name="pulse-outline" slot="start"></ion-icon>
+              <ion-label>Heart rate</ion-label>
+            </ion-item>
+          </div>
+        </div>
+        <div class="menu-footer">
+          <ion-fab>
+            <ion-fab-button (click)="close()" >
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-modal 
+    #editPetModal
+    trigger="open-edit-pet-modal"
+    [initialBreakpoint]="1" 
+    [breakpoints]="[0, 1]" 
+    class="edit-pet-modal">
+    <ng-template>
+      <ion-header class="new-journal" no-border no-shadow mode="md">
+        <ion-toolbar mode="md">
+          <ion-buttons slot="start">
+            <ion-button (click)="editPetModal.dismiss()" >
+              <ion-icon name="chevron-back" style="font-size: 2em!important;" color="primary" ></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-title class="ion-text-center">Edit pet</ion-title>
+          <div slot="end" style="width: 48px"></div>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding" mode="md">
+        <div class="form-container">
+          <form
+          id="editPetForm"
+          [formGroup]="editPetForm"
+          (ngSubmit)="editPetForm.valid ? onSubmitEditPet() : false">
+            <fieldset [disabled]="isSubmitting">
+              <div class="form-field-group avatar">
+                <ion-avatar class="pet-bubble" id="open-edit-pet-modal" matRipple (click)="onChangeProfilePic()" >
+                  <img alt="profile" [src]="petProfilePicFile.url" (error)="profilePicErrorHandler($event, 'pet')" />
+                </ion-avatar>
+              </div>
+              <div class="form-field-group">
+                <h1 style="text-align: center;"><strong>Pet name</strong></h1>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    type="text"
+                    placeholder="Pet name"
+                    formControlName="petName"
+                    autocomplete="new-petName"
+                  />
+                </mat-form-field>
+                <span class="error" *ngIf="errorControls.petName.touched && errorControls.petName.errors && errorControls.petName.errors.required">
+                  Name is required
+                </span>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </ion-content>
+      <ion-footer>
+        <ion-toolbar>
+          <ion-button
+            mode="md"
+            type="submit"
+            expand="full"
+            shape="round"
+            size="large"
+            color="primary"
+            form="editPetForm">
+            Save
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+</ion-content>

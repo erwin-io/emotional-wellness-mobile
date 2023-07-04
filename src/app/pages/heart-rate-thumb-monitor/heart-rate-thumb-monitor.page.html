@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title class="ion-text-center">Heart Rate</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="confirm()" [disabled]="!lastRecord || mode === 'start'">
+      <ion-button (click)="confirm()" [disabled]="!lastRecord || !lastRecord.value || lastRecord.value === '' || mode === 'start'">
         <ion-icon name="checkmark-outline" style="font-size: 2em!important;" color="primary" ></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -31,7 +31,7 @@
         <img src="../../../assets/img/impulse-check.png">
       </div>  
     </div>
-    <div class="result-mode" *ngIf="!isSubmitting && mode === 'result' && lastRecord">
+    <div class="result-mode" *ngIf="!isSubmitting && mode === 'result' && lastRecord && lastRecord.value && lastRecord.value !== ''">
       <div class="date">
         <h4><app-date-formatter [date]="lastRecord.timestamp" format="MMM dd, yyyy hh:mm a"></app-date-formatter></h4>
       </div>

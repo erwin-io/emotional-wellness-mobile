@@ -1,0 +1,151 @@
+
+ion-header{
+    --background-color: transparent;
+    --ion-color-base: transparent !important;
+    background: transparent!important;
+}
+
+ion-content{
+    --background: transparent!important;
+}
+ion-toolbar {
+    --background-color: transparent;
+    --ion-color-base: transparent !important;
+  }
+
+  ::ng-deep :root {
+    --ion-toolbar-background:transparent;
+  }
+.modal-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 25px 25px 25px;
+    .dialog {
+        display: flex;
+        flex-direction: column;
+        max-height: 500px;
+        width: 100%;
+        margin-top: auto;
+        margin-bottom: auto;
+        position: relative;
+        .menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            margin-top: 90px;
+            height: 100%;
+            padding: 25px;
+            border-radius: 10px;
+            .menu-header {
+                display: flex;
+                flex-direction: column;
+                margin-top: 10px;
+                .message {
+                    display: flex;
+                    background-color: #0097A7;
+                    color: #fff;
+                    width: 100%;
+                    padding: 15px;
+                    border-radius: 5px;
+                }
+            }
+            .menu-body {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                row-gap: 5px;
+                .item-holder {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    padding: 2px;
+                    ion-item {
+                        z-index: 0;
+                        color: #0097A7!important;
+                        outline: 2px solid;
+                        border-radius: 3px!important;
+                        outline-color: #0097A7 !important;
+                        .count {
+                            margin: 0 !important;
+                            width: 30px;
+                            height: 30px;
+                            display: flex;
+                            border-radius: 100%;
+                            background: #FF5252;
+                            flex-direction: column;
+                            color: #fff;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        ion-icon {
+                            color: #0097A7!important;
+                        }
+                    }
+                }
+            }
+            .menu-footer {
+                margin-top: 40px;
+                min-height: 56px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        .pet-bubble {
+            height: 100px;
+            width: 100px;
+            padding: 5px;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px 0 rgb(122 122 122 / 46%);
+        }
+    }
+}
+
+.edit-pet-modal {
+    ion-header.new-journal::after {
+        background-image: none;
+      }
+    .form-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        form {
+            flex-grow: 0;
+            margin-right: 20px;
+            margin-left: 20px;
+            .avatar {
+                align-items: center;
+                margin-bottom: 20px;
+                ion-avatar {
+                    height: 150px;
+                    width: 150px;
+                    box-shadow: 0 0 10px 0 rgba(122, 122, 122, 0.46);
+                }
+            }
+        }
+    }
+    ::ng-deep ion-footer {
+      display: flex;
+      ion-toolbar {
+        display: flex;
+        padding: 5px 36px;
+        ion-button {
+            height: 50px;
+            flex-grow: 1;
+            font-size: 18px;
+            width: 100%;
+            margin: 0!important;
+        }
+      }
+    }
+    
+}

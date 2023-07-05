@@ -10,10 +10,6 @@ export class PageLoaderService {
   constructor(private modalCtrl: ModalController) {}
 
   async open(message) {
-    if(this.modal){
-      this.modal.componentProps = { message };
-      return;
-    }
     this.modal = await this.modalCtrl.create({
       component: PageLoaderComponent,
       id: 'page-loader',

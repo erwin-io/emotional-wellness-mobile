@@ -74,7 +74,9 @@ export class LoginPage implements OnInit {
             const userData: LoginResult = res.data;
             this.storageService.saveLoginUser(userData);
             this.fcmService.init();
-            window.location.href = '/home';
+            setTimeout(()=> {
+              window.location.href = '/home';
+            }, 2000);
           } else {
             await this.pageLoaderService.close();
             this.isSubmitting = false;

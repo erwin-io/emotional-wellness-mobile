@@ -10,7 +10,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/quotes */
 import { App } from '@capacitor/app';
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController, ModalController, AlertController, AnimationController, IonModal, Platform } from '@ionic/angular';
 import { forkJoin } from 'rxjs';
@@ -54,8 +54,8 @@ export class HomePage implements OnInit {
   yesterdaysSummary: JournalEntrySummary;
   currentWeek: JournalEntryWeeklySummary;
   heartRatePast5Days: HeartRateLog[];
-  selected: { name: string, moodPercent: number } = { name: "Okay", moodPercent: 0 };
-  selectedHeartRate: { date: Date, value: number } = { } as any;
+  selected: { name: string; moodPercent: number } = { name: "Okay", moodPercent: 0 };
+  selectedHeartRate: { date: Date; value: number } = { } as any;
 
   options: EChartsOption;
   heartRateChartOptions: EChartsOption;
@@ -132,7 +132,7 @@ export class HomePage implements OnInit {
         this.yesterdaysSummary = yesterdaysSummary && yesterdaysSummary.data ? yesterdaysSummary.data : null;
         this.currentWeek = getWeeklySummary && getWeeklySummary.data ? getWeeklySummary.data : null;
 
-        const recommendation: { moodEntityId: number, value: string }[] = this.shuffle(this.appConfigService.config.recommendation);
+        const recommendation: { moodEntityId: number; value: string }[] = this.shuffle(this.appConfigService.config.recommendation);
         this.recommendation = recommendation.filter(x=>x.moodEntityId === Number(this.currentWeek.moodEntityId)).map(x=> {
           const backgroundColor = this.generateRandomColor();
           const brightness = this.getBrightness(this.hexToRgb(backgroundColor));
@@ -198,12 +198,12 @@ export class HomePage implements OnInit {
                     name
                   },
                   selected: this.currentWeek.moodEntityId === x.moodEntityId 
-                }
+                };
               })
             },
           
           ],
-        }
+        };
         const heartRateDates = this.getPastDates(
           moment(new Date(new Date().setDate(new Date().getDate() - 4))).format("YYYY-MM-DD"),
           moment(new Date()).format("YYYY-MM-DD"));
@@ -324,9 +324,12 @@ export class HomePage implements OnInit {
       backdropDismiss: false,
       canDismiss: true,
       mode: "ios",
-      componentProps: { modal, todaysSummary: this.todaysSummary },
+      componentProps: { modal, todaysSummary: this.todaysSummary, newEntryAdded: new EventEmitter<any>() },
     });
-    modal.present();
+    await modal.present();
+    modal.componentProps.newEntryAdded.subscribe(async (res)=> {
+      await this.initDashboard();
+    });
   }
 
   async onOpenNewJournal() {
@@ -340,14 +343,21 @@ export class HomePage implements OnInit {
       backdropDismiss: false,
       canDismiss: true,
       mode: "ios",
-      componentProps: { modal, lastHeartRateRecord: { heartRateLogId: this.todaysSummary.lastHeartRateLogId, value: this.todaysSummary.heartRate, timestamp: this.todaysSummary.timestamp } },
+      componentProps: { 
+        modal, 
+        newEntryAdded: new EventEmitter<any>(),
+        lastHeartRateRecord: { 
+          heartRateLogId: this.todaysSummary.lastHeartRateLogId, 
+          value: this.todaysSummary.heartRate, 
+          timestamp: this.todaysSummary.timestamp 
+        } 
+      },
     });
-    modal.onWillDismiss().then(async (res: { data: JournalEntry; role: string }) => {
-      if (res.data && res.role === 'confirm') {
-        await this.initDashboard();
-      }
+    await modal.present();
+    modal.componentProps.newEntryAdded.subscribe(async (res)=> {
+      await this.initDashboard();
     });
-    modal.present();
+  
   }
 
   async onChartClick(event) {

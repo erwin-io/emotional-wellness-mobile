@@ -225,7 +225,7 @@
           <h1 class="title">Great! Everything's good. You can now register.</h1>
         </div>
         <div class="form-footer">
-          <ion-button shape="round" size="large" [disabled]="!otpForm.valid || isSubmitting "
+          <ion-button shape="round" size="large" [disabled]="isSubmitting "
           (click)="submit()">Register now</ion-button>
           <ion-button shape="round" size="large" fill="outline" (click)="signUpStepper.previous()">Go back</ion-button>
         </div>

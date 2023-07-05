@@ -1,7 +1,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/quotes */
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { AlertController, IonModal, ModalController } from '@ionic/angular';
 import { EmojiFaceSliderComponent } from 'src/app/component/emoji-face-slider/emoji-face-slider.component';
@@ -22,6 +22,7 @@ import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 export class NewJournalPage implements OnInit {
   isProcessing = false;
   noteModalScrollEnable = false;
+  @Output() newEntryAdded = new EventEmitter<any>();
   constructor(private modalCtrl: ModalController,
     private journalEntryService: JournalEntryService,
     private moodSentimentService: MoodSentimentService,
@@ -95,6 +96,7 @@ export class NewJournalPage implements OnInit {
       this.journalEntryService.add(params)
         .subscribe(async res => {
           if (res.success) {
+            this.newEntryAdded.emit(res.data);
             this.isSubmitting = false;
             await this.pageLoaderService.close();
             await this.modalCtrl.dismiss(res.data, 'confirm');

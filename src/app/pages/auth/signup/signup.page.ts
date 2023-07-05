@@ -173,7 +173,11 @@ export class SignupPage implements OnInit {
 
   close() {
     if(this.signUpStepper.selectedIndex > 0) {
-      this.signUpStepper.previous();
+      if(this.signUpStepper.selectedIndex === 2) {
+        this.signUpStepper.selectedIndex = 0;
+      } else {
+        this.signUpStepper.previous();
+      }
     } else {
       this.modalCtrl.dismiss(null, 'cancel');
     }

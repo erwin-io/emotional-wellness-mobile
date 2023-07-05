@@ -14,7 +14,7 @@
             <ion-item  fill="outline" lines="none">
               <ion-icon name="notifications-outline" slot="start"></ion-icon>
               <ion-label>Notifications</ion-label>
-              <ion-label slot="end"><h3 class="count" *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification > 99 ? '99+' : totalUnreadNotification}}>1</h3></ion-label>
+              <ion-label slot="end"><h3 class="count" *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification > 99 ? '99+' : totalUnreadNotification}}</h3></ion-label>
             </ion-item>
           </div>
           <div matRipple class="item-holder" (click)="onOpenTimeline()">

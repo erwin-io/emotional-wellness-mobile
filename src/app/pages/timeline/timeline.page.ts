@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AlertController, IonModal, ModalController, Platform } from '@ionic/angular';
 import * as moment from 'moment';
@@ -41,6 +41,7 @@ export class TimelinePage implements OnInit {
   @ViewChild("journalDetailsModal") journalDetailsModal: IonModal;
   @ViewChild("journalDetails") journalDetails: ElementRef<JournalDetailsPage>;
   refreshEvent: any;
+  @Output() newEntryAdded = new EventEmitter<any>();
   constructor(
     private platform: Platform,
     private modalCtrl: ModalController,
@@ -177,19 +178,29 @@ export class TimelinePage implements OnInit {
     let modal: any = null;
     modal = await this.modalCtrl.create({
       component: NewJournalPage,
-
       cssClass: 'modal-fullscreen',
       backdropDismiss: false,
       canDismiss: true,
       mode: "ios",
-      componentProps: { modal, lastHeartRateRecord: { heartRateLogId: this.todaysSummary.lastHeartRateLogId, value: this.todaysSummary.heartRate, timestamp: this.todaysSummary.timestamp } },
+      componentProps: { 
+        modal, 
+        newEntryAdded: new EventEmitter<any>(),
+        lastHeartRateRecord: { 
+          heartRateLogId: this.todaysSummary.lastHeartRateLogId, 
+          value: this.todaysSummary.heartRate, 
+          timestamp: this.todaysSummary.timestamp 
+        } 
+      },
     });
     modal.onWillDismiss().then(async (res: { data: JournalEntry; role: string }) => {
       if (res.data && res.role === 'confirm') {
         await this.selectDate(new Date());
       }
     });
-    modal.present();
+    await modal.present();
+    modal.componentProps.newEntryAdded.subscribe((res)=> {
+      this.newEntryAdded.emit(res);
+    });
   }
 
   async openDetails(details) {

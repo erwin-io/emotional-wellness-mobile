@@ -189,31 +189,39 @@
         </div>
       </div>
     </mat-step>
-    <mat-step [stepControl]="petForm">
+    <mat-step [stepControl]="petCompanionForm">
       <div class="form-container center">
         <div class="form-header">
           <h1 class="title">My pet companion</h1>
         </div>
         <form
-          [formGroup]="petForm"
+          [formGroup]="petCompanionForm"
           (ngSubmit)="savePet()">
           <fieldset [disabled]="isSubmitting">
             
           <div class="form-field-group">
-            <mat-form-field appearance="outline">
-              <input
-                matInput
-                type="text"
-                placeholder="My pet companion"
-                formControlName="petName"
-                autocomplete="new-petName"
-              />
-            </mat-form-field>
+            <swiper-container #swiperContainer [ngClass]="{ 'touched': isTouchingSlide }" #swiper class="swiper-container" (activeindexchange)="activeIndexChange($event)" (touchstart)="isTouchingSlide = true;" (touchend)="isTouchingSlide = false;">
+              <swiper-slide>
+                <div class="pet-container">
+                  <img src="../../../../assets/img/pet_companion_dog_animated.png">
+                </div>
+              </swiper-slide>
+              <swiper-slide>
+                <div class="pet-container">
+                  <img src="../../../../assets/img/pet_companion_cat_animated.gif">
+                </div>
+              </swiper-slide>
+              <swiper-slide>
+                <div class="pet-container">
+                  <img src="../../../../assets/img/pet_companion_bird_animated.png">
+                </div>
+              </swiper-slide>
+            </swiper-container>
           </div>
           </fieldset>
         </form>
         <div class="form-footer">
-          <ion-button shape="round" size="large" [disabled]="!petForm.valid"
+          <ion-button shape="round" size="large" [disabled]="!petCompanionForm.valid"
           (click)="savePet()">Continue</ion-button>
           <ion-button shape="round" size="large" fill="outline" (click)="signUpStepper.previous()">Go back</ion-button>
         </div>

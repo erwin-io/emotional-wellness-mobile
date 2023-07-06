@@ -68,11 +68,42 @@ export class LoginPage implements OnInit {
       this.authService.login(params)
         .subscribe(async res => {
           if (res.success) {
+
             this.storageService.saveRefreshToken(res.data.accessToken);
             this.storageService.saveAccessToken(res.data.refreshToken);
             this.storageService.saveTotalUnreadNotif(res.data.totalUnreadNotif);
             const userData: LoginResult = res.data;
             this.storageService.saveLoginUser(userData);
+
+            let lastLoginData = this.getLastLogin();
+            if(lastLoginData && lastLoginData.userId === res.data.userId && lastLoginData.date) {
+              const lasLoginDate: any = new Date(lastLoginData.date);
+              const today: any = new Date();
+              const hoursDiff = Math.abs(lasLoginDate - today) / 36e5;
+              console.log('hoursDiff', hoursDiff);
+              if(hoursDiff > 23) {
+                lastLoginData = {
+                  userId: res.data.userId,
+                  date: new Date().toString()
+                };
+                localStorage.setItem('lastLogin', JSON.stringify(lastLoginData));
+                localStorage.setItem('showPetCompanion', 'true');
+              } else {
+                localStorage.setItem('showPetCompanion', 'false');
+              }
+            } else {
+              lastLoginData = {
+                userId: res.data.userId,
+                date: new Date().toString()
+              };
+              localStorage.setItem('lastLogin', JSON.stringify(lastLoginData));
+              localStorage.setItem('showPetCompanion', 'true');
+            }
+
+            if(res.data.totalUnreadNotif > 0) {
+              localStorage.setItem('showPetCompanion', 'true');
+            }
+
             this.fcmService.init();
             setTimeout(()=> {
               window.location.href = '/home';
@@ -126,7 +157,13 @@ export class LoginPage implements OnInit {
       this.router.navigate(['landing-page'], navigationExtras);
     }
   }
-  
+
+  getLastLogin() {
+    const lastLoginJSON = localStorage.getItem('lastLogin');
+    const lastLoginData = lastLoginJSON && lastLoginJSON !== '' ? JSON.parse(lastLoginJSON) : null;
+    return lastLoginData;
+  }
+
 
   async close() {
     const top = await this.modalCtrl.getTop();

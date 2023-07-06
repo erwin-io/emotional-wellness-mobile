@@ -27,7 +27,8 @@
             "updateUser": "users/",
             "updateFirebaseToken": "users/updateFirebaseToken",
             "changePassword": "users/changePassword",
-            "updateProfilePicture": "users/updateProfilePicture"
+            "updateProfilePicture": "users/updateProfilePicture",
+            "updatePetCompanion": "users/updatePetCompanion"
         },
         "dashboard": {
             "getDashboard": "dashboard/getDashboard"
@@ -55,9 +56,6 @@
         },
         "moodSentiment": {
             "getSentimentAnalysis": "mood-sentiment/getSentimentAnalysis"
-        },
-        "pet": {
-            "update": "pet/"
         }
     },
     "recommendation": [

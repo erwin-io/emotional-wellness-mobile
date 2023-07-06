@@ -149,3 +149,38 @@ ion-toolbar {
     }
     
 }
+
+.swiper-container {
+    width: 60%;
+    overflow: visible;
+    .pet-container {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     img {
+      scale: 0.8;
+      transition: all 0.3s;
+     }
+    }
+    &.touched {
+     .pet-container {
+        img {
+            scale: 0.8!important;
+        }
+     }
+    }
+    :not(.swiper-slide-active) {
+      .pet-container {
+        img {
+        opacity: 0.2;
+       }
+      }
+    }
+    .swiper-slide-active {
+      .pet-container {
+        img {
+            scale: 1;
+       }
+      }
+    }
+  }

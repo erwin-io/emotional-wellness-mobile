@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-output-on-prefix */
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { MoodEntityEnum } from 'src/app/core/enums/mood-entity.enum';

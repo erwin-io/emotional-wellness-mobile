@@ -70,6 +70,19 @@ export class UserService implements IServices {
     );
   }
 
+  updatePetCompanion(data: any): Observable<ApiResponse<User>> {
+    return this.http
+      .put<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.user.updatePetCompanion,
+        data
+      )
+      .pipe(
+        tap((_) => this.log('pet')),
+        catchError(this.handleError('pet', []))
+      );
+  }
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(`${operation} failed: ${Array.isArray(error.error.message) ? error.error.message[0] : error.error.message}`);

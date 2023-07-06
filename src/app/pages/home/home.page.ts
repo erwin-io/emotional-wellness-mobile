@@ -103,10 +103,21 @@ export class HomePage implements OnInit {
 
   get totalUnreadNotification() {
     const total = this.storageService.getTotalUnreadNotif();
-    return total? total : 0;
+    return total && !isNaN(Number(total)) ? Number(total) : 0;
+  }
+
+  getPetCompanionProfile(petCompanionId) {
+    if(petCompanionId === '2') {
+      return '../../../assets/img/pet_companion_cat_profile.png';
+    } else if(petCompanionId === '3') {
+      return '../../../assets/img/pet_companion_bird_profile.png';
+    } else {
+      return '../../../assets/img/pet_companion_dog_profile.png';
+    }
   }
 
   async initDashboard(){
+
     this.isLoading = true;
     forkJoin(
       this.journalEntryService.getDateSummary({
@@ -124,13 +135,20 @@ export class HomePage implements OnInit {
       }),
       this.notificationService.getTotalUnreadByUserId({userId: this.currentUser.userId})
   ).subscribe(
-      ([todaysSummary, yesterdaysSummary, getWeeklySummary, heartRate, getTotalUnreadByUserId]) => {
+      async ([todaysSummary, yesterdaysSummary, getWeeklySummary, heartRate, getTotalUnreadByUserId]) => {
         
         this.storageService.saveTotalUnreadNotif(getTotalUnreadByUserId.data.total);
 
         this.todaysSummary = todaysSummary && todaysSummary.data ? todaysSummary.data : null;
         this.yesterdaysSummary = yesterdaysSummary && yesterdaysSummary.data ? yesterdaysSummary.data : null;
         this.currentWeek = getWeeklySummary && getWeeklySummary.data ? getWeeklySummary.data : null;
+
+        this.currentWeek.result = this.currentWeek.result.every(x=> x.count <= 0) ? this.currentWeek.result.map(x=> {
+          if(x.moodEntityId === this.currentWeek.moodEntityId) {
+            x.count = 1;
+          }
+          return x;
+        }) : this.currentWeek.result;
 
         const recommendation: { moodEntityId: number; value: string }[] = this.shuffle(this.appConfigService.config.recommendation);
         this.recommendation = recommendation.filter(x=>x.moodEntityId === Number(this.currentWeek.moodEntityId)).map(x=> {
@@ -146,6 +164,13 @@ export class HomePage implements OnInit {
           }
           return { value: x.value, style: "background-color: " + backgroundColor + ";color: " + color + ";"};
         });
+        const showPetCompanionJSON = localStorage.getItem('showPetCompanion');
+        const showPetCompanion = showPetCompanionJSON && showPetCompanionJSON !== "" ? JSON.parse(showPetCompanionJSON) : false;
+        if(showPetCompanion) {
+          await this.onShowPetCompanion();
+        } else if(this.totalUnreadNotification > 0) {
+          await this.onShowPetCompanion();
+        }
         this.options = {
           calculable: false,
           series: [
@@ -291,24 +316,6 @@ export class HomePage implements OnInit {
       enterAnimation: this.animationService.pushRightAnimation,
       leaveAnimation: this.animationService.leavePushRightAnimation,
       componentProps: { modal },
-    });
-    modal.present();
-  }
-
-  async onShowNotif() {
-
-    if(!this.isAuthenticated) {
-      this.authService.logout();
-    }
-    let modal: any = null;
-    modal = await this.modalCtrl.create({
-      component: NotificationPage,
-      cssClass: 'modal-fullscreen',
-      backdropDismiss: false,
-      canDismiss: true,
-      enterAnimation: this.animationService.pushLeftAnimation,
-      leaveAnimation: this.animationService.leavePushLeftAnimation,
-      componentProps: { modal, todaysSummary: this.todaysSummary, lastHeartRateRecord: { heartRateLogId: this.todaysSummary.lastHeartRateLogId, value: this.todaysSummary.heartRate, timestamp: this.todaysSummary.timestamp } },
     });
     modal.present();
   }

@@ -1,7 +1,8 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/quotes */
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActionSheetController, AlertController, IonModal, ModalController, Platform } from '@ionic/angular';
 import { AnimationService } from 'src/app/core/services/animation.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -15,9 +16,11 @@ import { HeartRateLogService } from 'src/app/core/services/heart-rate-log.servic
 import * as moment from 'moment';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PetService } from 'src/app/core/services/pet.service';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem } from '@capacitor/filesystem';
+import { UserService } from 'src/app/core/services/user.service';
+import { PetCompanionEnum } from 'src/app/core/enums/pet-companion.enum';
+import { SwiperContainer } from 'swiper/element';
 
 @Component({
   selector: 'app-pet-companion',
@@ -25,31 +28,30 @@ import { Filesystem } from '@capacitor/filesystem';
   styleUrls: ['./pet-companion.page.scss']
 })
 export class PetCompanionPage implements OnInit, AfterViewInit {
+  @ViewChild('swiperContainer') swiperContainer: ElementRef<SwiperContainer>;
+  @ViewChild('editPetModal') editPetModal: IonModal;
   isSubmitting = false;
-  editPetForm: FormGroup;
   todaysSummary: JournalEntrySummary;
   lastHeartRateRecord: HeartRateLog;
   petProfilePicFile: any;
+  isTouchingSlide = false;
+  petCompanionForm: FormGroup;
 
   constructor(private modalCtrl: ModalController,
     private storageService: StorageService,
     private authService: AuthService,
     private pageLoaderService: PageLoaderService,
-    private petService: PetService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private actionSheetController: ActionSheetController,
     private platform: Platform,
     private alertController: AlertController,
     private heartRateLogService: HeartRateLogService,
-    private animationService: AnimationService) { }
-
-  get isFormDirty() {
-    return this.editPetForm.dirty;
-  }
-
-  get errorControls() {
-    return this.editPetForm.controls;
-  }
+    private animationService: AnimationService) {
+      this.petCompanionForm = this.formBuilder.group({
+        petCompanionId: ['1', [Validators.required]],
+      });
+     }
 
   get user() {
     return this.storageService.getLoginUser();
@@ -70,109 +72,48 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.editPetForm = this.formBuilder.group({
-      petName : [this.user.pet.name, Validators.required],
-    });
   }
 
   ngAfterViewInit(): void {
-    this.petProfilePicFile = {
-      url: this.user.pet.profilePicFile
-    }
   }
   
 
-  async onChangeProfilePic() {
-    const actionSheet = await this.actionSheetController.create({
-      cssClass: 'sched-card-action-sheet',
-      buttons: [
-        {
-          text: 'Camera',
-          handler: async () => {
-            const image = await Camera.getPhoto({
-              quality: 90,
-              allowEditing: false,
-              resultType: CameraResultType.Uri,
-              source: CameraSource.Camera, // Camera, Photos or Prompt!
-            });
-            if (image) {
-              const dataURL = await this.readAsBase64(image);
-              this.petProfilePicFile = {
-                fileName: `pet-profile.${image.format}`,
-                data: dataURL.split(',')[1],
-                url: dataURL,
-              };
-            }
-            actionSheet.dismiss();
-          },
-        },
-        {
-          text: 'Gallery',
-          handler: async () => {
-            const image = await Camera.getPhoto({
-              quality: 90,
-              allowEditing: false,
-              resultType: CameraResultType.Uri,
-              source: CameraSource.Photos, // Camera, Photos or Prompt!
-            });
-            if (image) {
-              const dataURL = await this.readAsBase64(image);
-              this.petProfilePicFile = {
-                fileName: `pet-profile.${image.format}`,
-                data: dataURL.split(',')[1],
-                url: dataURL,
-              };
-            }
-            actionSheet.dismiss();
-          },
-        },
-        {
-          text: 'Cancel',
-          handler: async () => {
-            actionSheet.dismiss();
-          },
-        },
-      ],
-    });
-    await actionSheet.present();
-
-  }
-  
-  async readAsBase64(photo: Photo) {
-    if (this.platform.is('hybrid')) {
-      const file = await Filesystem.readFile({
-        path: photo.path,
-      });
-
-      return file.data;
+  getPetCompanionProfile(petCompanionId) {
+    if(petCompanionId === '2') {
+      return '../../../assets/img/pet_companion_cat_animated.gif';
+    } else if(petCompanionId === '3') {
+      return '../../../assets/img/pet_companion_bird_animated.png';
     } else {
-      // Fetch the photo, read as a blob, then convert to base64 format
-      const response = await fetch(photo.webPath);
-      const blob = await response.blob();
-
-      const base64 = (await this.convertBlobToBase64(blob)) as string;
-      return base64;
+      return '../../../assets/img/pet_companion_dog_animated.gif';
     }
   }
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  convertBlobToBase64 = (blob: Blob) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.readAsDataURL(blob);
-    });
 
-  async onSubmitEditPet() {
-    const params = {
-      petProfilePic: this.petProfilePicFile.data ? this.petProfilePicFile : null,
-      ...this.editPetForm.value
-    };
-    if (!this.editPetForm.valid) {
-      return;
+  setSelected(petCompanionId) {
+    let index = 0;
+    if(petCompanionId === PetCompanionEnum.CAT.toString()) {
+      index = 1;
+    } else if(petCompanionId === PetCompanionEnum.BIRD.toString()) {
+      index = 2;
+    } else {
+      index = 0;
     }
+    this.swiperContainer.nativeElement.swiper.slideTo(index);
+  }
+
+  activeIndexChange(event) {
+    const activeIndex = event.detail[0].activeIndex;
+    if(activeIndex === 1) {
+      this.petCompanionForm.controls.petCompanionId.setValue(PetCompanionEnum.CAT.toString());
+    } else if(activeIndex === 2) {
+      this.petCompanionForm.controls.petCompanionId.setValue(PetCompanionEnum.BIRD.toString());
+    } else {
+      this.petCompanionForm.controls.petCompanionId.setValue(PetCompanionEnum.DOG.toString());
+    }
+    console.log('activeIndex', activeIndex);
+  }
+
+  async onSubmitUpdatePetCompanion() {
+    const params = {};
     try {
       await this.presentAlert({
         header: 'Update pet?',
@@ -185,7 +126,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
             text: 'YES',
             role: 'confirm',
             handler: () => {
-              this.savePet(params);
+              this.updatePetCompanion(params);
             },
           },
         ],
@@ -202,11 +143,11 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
     }
   }
 
-  async savePet(params) {
+  async updatePetCompanion(params) {
     try {
       await this.pageLoaderService.open('Saving...');
       this.isSubmitting = true;
-      this.petService.update(params).subscribe(
+      this.userService.updatePetCompanion(params).subscribe(
         async (res) => {
           if (res.success) {
             await this.pageLoaderService.close();
@@ -216,10 +157,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
             });
             this.isSubmitting = false;
             const user = this.user;
-            user.pet = {
-              name: res.data.name,
-              profilePicFile: this.petProfilePicFile.url
-            };
+            user.petCompanion = res.data.petCompanion;
             this.storageService.saveLoginUser(user);
             this.modalCtrl.dismiss(res.data, 'confirm');
           } else {
@@ -329,6 +267,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
   }
 
   close() {
+    localStorage.setItem('showPetCompanion', 'false');
     this.modalCtrl.dismiss({lastHeartRateRecord: this.lastHeartRateRecord}, 'cancel');
   }
 

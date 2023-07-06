@@ -235,7 +235,7 @@
           overflow: visible!important;" 
           color="danger" *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification > 99 ? '99+' : totalUnreadNotification}}</ion-badge>
       <ion-avatar (click)="onShowPetCompanion()">
-        <img alt="profile" [src]="user.pet.profilePicFile" (error)="profilePicErrorHandler($event, 'pet')" />
+        <img alt="profile" [src]="isAuthenticated ? getPetCompanionProfile(user.petCompanion.petCompanionId) : ''" (error)="profilePicErrorHandler($event, 'pet')" />
       </ion-avatar>
     </div>
   </ion-toolbar>

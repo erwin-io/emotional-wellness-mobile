@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { NavigationExtras, Router } from '@angular/router';
@@ -11,23 +11,28 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { PageLoaderService } from 'src/app/core/ui-service/page-loader.service';
 import { LoginPage } from '../login/login.page';
 import { AnimationService } from 'src/app/core/services/animation.service';
+import Swiper from 'swiper';
+import { SwiperContainer } from 'swiper/element';
+import { PetCompanionEnum } from 'src/app/core/enums/pet-companion.enum';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
 })
-export class SignupPage implements OnInit {
+export class SignupPage implements OnInit, AfterViewInit {
+  @ViewChild('swiperContainer') swiperContainer: SwiperContainer;
   @ViewChild('signUpStepper') signUpStepper: MatStepper;
   isSubmitting = false;
   mobileNumberForm: FormGroup;
   otpForm: FormGroup;
   authForm: FormGroup;
   personalDetailsForm: FormGroup;
-  petForm: FormGroup;
+  petCompanionForm: FormGroup;
   defaultDate = new Date();
   matcher = new MyErrorStateMatcher();
   isProcessed = false;
+  isTouchingSlide = false;
 
   otpSent = false;
   constructor(private modalCtrl: ModalController,
@@ -47,20 +52,56 @@ export class SignupPage implements OnInit {
       this.authForm = this.formBuilder.group({
         password: [null, [Validators.required,Validators.minLength(3),Validators.maxLength(16)]],
         confirmPassword : '',
-      }, 
+      },
       { validators: this.checkPasswords });
       this.personalDetailsForm = this.formBuilder.group({
         name : [null, [Validators.required, Validators.minLength(2)]],
         birthDate : [this.defaultDate.toISOString(), Validators.required],
         genderId : [null, Validators.required],
       });
-      this.petForm = this.formBuilder.group({
-        petName: [null, [Validators.required,Validators.minLength(1)]],
+      this.petCompanionForm = this.formBuilder.group({
+        petCompanionId: [null, [Validators.required]],
       });
      }
 
   ngOnInit() {
   }
+
+  ngAfterViewInit(): void {
+    this.swiperContainer.swiper = new Swiper('.swiper-container', {
+      initialSlide: -1,
+      slidesPerView: 1,
+      centeredSlides: true,
+      allowTouchMove: true,
+      grabCursor: true
+    });
+    this.setSelected('0');
+  }
+
+  setSelected(petCompanionId) {
+    let index = 0;
+    if(petCompanionId === PetCompanionEnum.CAT.toString()) {
+      index = 1;
+    } else if(petCompanionId === PetCompanionEnum.BIRD.toString()) {
+      index = 2;
+    } else {
+      index = 0;
+    }
+    this.swiperContainer.swiper.slideTo(index);
+  }
+
+  activeIndexChange(event) {
+    const activeIndex = event.detail[0].activeIndex;
+    if(activeIndex === 1) {
+      this.petCompanionForm.controls.petCompanionId.setValue(PetCompanionEnum.CAT.toString());
+    } else if(activeIndex === 2) {
+      this.petCompanionForm.controls.petCompanionId.setValue(PetCompanionEnum.BIRD.toString());
+    } else {
+      this.petCompanionForm.controls.petCompanionId.setValue(PetCompanionEnum.DOG.toString());
+    }
+    console.log('activeIndex', activeIndex);
+  }
+
 
   checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
     const pass = group.get('password')?.value;
@@ -107,7 +148,7 @@ export class SignupPage implements OnInit {
   }
 
   async savePet() {
-    if(!this.petForm.valid) {
+    if(!this.petCompanionForm.valid) {
       return;
     }
     this.signUpStepper.next();
@@ -118,10 +159,8 @@ export class SignupPage implements OnInit {
       ...this.mobileNumberForm.value,
       ...this.authForm.value,
       ...this.personalDetailsForm.value,
-      pet: {
-        ...this.petForm.value
-      },
-    }
+      ...this.petCompanionForm.value
+    };
     await this.onFormSubmit(param);
   }
 

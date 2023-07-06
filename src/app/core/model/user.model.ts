@@ -8,11 +8,10 @@ export class User {
   birthDate: string;
   age: string;
   userProfilePic: any;
-  pet: any;
+  petCompanion: PetCompanion;
 }
 
-
-export class Pet {
+export class PetCompanion {
+  petCompanionId: string;
   name: string;
-  profilePicFile: any;
 }

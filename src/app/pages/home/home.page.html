@@ -1,11 +1,4 @@
 <ion-header no-border no-shadow>
-  
-  <ion-toolbar mode="md">
-    <ion-title class="ion-text-center">
-      <h4><p>The demo account will expire in 5 hours. </p></h4>
-    </ion-title>
-  </ion-toolbar>
-
   <ion-toolbar mode="md">
     <div slot="start" class="profile-toolbar">
       <ion-avatar (click)="onShowSettings()">
@@ -183,7 +176,7 @@
     <ng-template>
       <app-heart-rate-learn-more></app-heart-rate-learn-more>
       <ion-footer>
-        <ion-toolbar>
+        <ion-toolbar style="background-color: #fff!important;">
           <ion-button
             mode="md"
             type="submit"
@@ -192,7 +185,7 @@
             color="danger"
             size="default"
             fill="outline"
-            style="height: 45px"
+            style="height: 45px;margin: 0!important;"
             (click)="openHeartRate()"
             >
             Check my heart rate

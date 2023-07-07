@@ -153,6 +153,9 @@ ion-toolbar {
 .swiper-container {
     width: 60%;
     overflow: visible;
+    &.disabled {
+        opacity: 0.5;
+    }
     .pet-container {
      display: flex;
      align-items: center;

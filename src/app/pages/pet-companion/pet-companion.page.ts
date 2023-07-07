@@ -31,6 +31,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
   @ViewChild('swiperContainer') swiperContainer: ElementRef<SwiperContainer>;
   @ViewChild('editPetModal') editPetModal: IonModal;
   isSubmitting = false;
+  isLoading = false;
   todaysSummary: JournalEntrySummary;
   lastHeartRateRecord: HeartRateLog;
   petProfilePicFile: any;
@@ -48,6 +49,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
     private alertController: AlertController,
     private heartRateLogService: HeartRateLogService,
     private animationService: AnimationService) {
+      this.isLoading = true;
       this.petCompanionForm = this.formBuilder.group({
         petCompanionId: ['1', [Validators.required]],
       });
@@ -72,6 +74,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.isLoading = false;
   }
 
   ngAfterViewInit(): void {
@@ -98,6 +101,7 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
       index = 0;
     }
     this.swiperContainer.nativeElement.swiper.slideTo(index);
+    this.isLoading = false;
   }
 
   activeIndexChange(event) {
@@ -113,34 +117,38 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
   }
 
   async onSubmitUpdatePetCompanion() {
-    const params = {};
-    try {
-      await this.presentAlert({
-        header: 'Update pet?',
-        buttons: [
-          {
-            text: 'CANCEL',
-            role: 'cancel',
-          },
-          {
-            text: 'YES',
-            role: 'confirm',
-            handler: () => {
-              this.updatePetCompanion(params);
-            },
-          },
-        ],
-      });
-    }
-    catch(ex) {
-      this.isSubmitting = false;
-      await this.pageLoaderService.close();
-      await this.presentAlert({
-        header: 'Try again!',
-        message: Array.isArray(ex.message) ? ex.message[0] : ex.message,
-        buttons: ['OK'],
-      });
-    }
+    const params = {
+      ...this.petCompanionForm.value,
+      userId: this.user.userId
+    };
+    await this.updatePetCompanion(params);
+    // try {
+    //   await this.presentAlert({
+    //     header: 'Update Pet Companion?',
+    //     buttons: [
+    //       {
+    //         text: 'CANCEL',
+    //         role: 'cancel',
+    //       },
+    //       {
+    //         text: 'YES',
+    //         role: 'confirm',
+    //         handler: () => {
+    //           this.updatePetCompanion(params);
+    //         },
+    //       },
+    //     ],
+    //   });
+    // }
+    // catch(ex) {
+    //   this.isSubmitting = false;
+    //   await this.pageLoaderService.close();
+    //   await this.presentAlert({
+    //     header: 'Try again!',
+    //     message: Array.isArray(ex.message) ? ex.message[0] : ex.message,
+    //     buttons: ['OK'],
+    //   });
+    // }
   }
 
   async updatePetCompanion(params) {
@@ -151,10 +159,6 @@ export class PetCompanionPage implements OnInit, AfterViewInit {
         async (res) => {
           if (res.success) {
             await this.pageLoaderService.close();
-            await this.presentAlert({
-              header: 'Saved!',
-              buttons: ['OK'],
-            });
             this.isSubmitting = false;
             const user = this.user;
             user.petCompanion = res.data.petCompanion;

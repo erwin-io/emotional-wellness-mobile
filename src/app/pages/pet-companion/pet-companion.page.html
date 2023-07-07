@@ -2,7 +2,7 @@
 <ion-content>
   <div class="modal-container">
     <div class="dialog">
-      <ion-avatar class="pet-bubble" (click)="editPetModal.present();" matRipple>
+      <ion-avatar class="pet-bubble" (click)="editPetModal.present();this.isLoading = true;" matRipple>
         <img alt="profile" [src]="isAuthenticated ? getPetCompanionProfile(user.petCompanion.petCompanionId) : ''" (error)="profilePicErrorHandler($event, 'pet')" />
       </ion-avatar>
       <div class="menu">
@@ -63,7 +63,7 @@
       <ion-content class="ion-padding" mode="md">
         <div class="form-container">
           <div class="form-field-group">
-            <swiper-container #swiperContainer [ngClass]="{ 'touched': isTouchingSlide }" #swiper class="swiper-container" (activeindexchange)="activeIndexChange($event)" (touchstart)="isTouchingSlide = true;" (touchend)="isTouchingSlide = false;">
+            <swiper-container #swiperContainer [ngClass]="{ 'touched': isTouchingSlide, 'disabled': isLoading }" #swiper class="swiper-container" [allowTouchMove]="!isLoading" [noSwiping]="isLoading" (activeindexchange)="activeIndexChange($event)" (touchstart)="isTouchingSlide = true;" (touchend)="isTouchingSlide = false;">
               <swiper-slide>
                 <div class="pet-container">
                   <img [src]="getPetCompanionProfile('1')">
@@ -92,7 +92,7 @@
             shape="round"
             size="large"
             color="primary"
-            form="editPetForm">
+            (click)="onSubmitUpdatePetCompanion()">
             Save
           </ion-button>
         </ion-toolbar>
